@@ -40,6 +40,13 @@ single source of truth. Read it before acting.
 8. **Stop conditions are hard.** Each prompt ends with an explicit stop condition. When you
    hit it, stop and summarize what you did + how I verify it. Do not continue past it.
 
+9. **Log every code change in `docs/PROGRESS.md`.** Any session that writes or improves
+   code is NOT done until you append a dated entry to `docs/PROGRESS.md` stating: (a) exactly
+   what changed — files touched and behaviour added/altered; (b) how to verify it (command +
+   result, e.g. `pytest` output); and (c) where the project now stands and what the next
+   step is. Treat this like a stop-condition, not an optional nicety — it is how every future
+   session knows where we are. Keep entries append-only; do not rewrite history.
+
 ## Architecture (from §2)
 
 - Layers: `/ingestion`, `/tailoring`, `/autofill`, `/api`, `/frontend`. Extension repo may

@@ -58,3 +58,25 @@ py -m venv .venv
 
 **Next session:** pipeline orchestrator + dedup/change detection (§3.9) + DB
 writes (§3.10). Do not start it here.
+
+## Session 3 — Repository setup, GitHub sync, and cross-session context
+
+Infrastructure/docs only — **no application (ingestion) code changed.**
+
+- **Relocated** the project to `…\.claude\sessions\CVapp`; recreated `.venv` there;
+  `pytest` still green (**32 passed**) at the new location.
+- **Version control:** initialized git (branch `main`); added `.gitignore` (excludes
+  `.venv/`, `__pycache__/`, `.pytest_cache/`); connected to GitHub at
+  `https://github.com/demiryyurtsever/CVapp.git`. Sync is **manual** (no auto-push hook)
+  by user choice; pushes are offered via an interactive in-chat prompt.
+- **Cross-session context:** added `CLAUDE.md` (standing rules, architecture, build order,
+  sync workflow, where-to-continue pointer) and `docs/Project_Dossier.md` (in-repo copy of
+  the canonical dossier; the `.docx` original stays in Downloads).
+- **Workflow:** made updating this `PROGRESS.md` a required step after any code work
+  (CLAUDE.md standing rule 9).
+
+**State now:** ingestion foundations complete and pushed to GitHub; project is
+version-controlled and self-documenting for future sessions.
+
+**Next session (unchanged):** pipeline orchestrator + dedup/change detection (§3.9) +
+DB writes/storage (§3.10).
