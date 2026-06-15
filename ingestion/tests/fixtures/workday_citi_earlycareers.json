@@ -1,0 +1,478 @@
+{
+  "_capture": {
+    "tenant": "citi",
+    "dc": "wd5",
+    "site": "2",
+    "list_url": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs",
+    "detail_url_pattern": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2{externalPath}",
+    "search_text": "Summer Analyst Program",
+    "applied_facets": {},
+    "captured": "2026-06-16",
+    "method": "Polite minimal capture (dossier 3.12): honest User-Agent, paginated POST (limit=20), 2s delay between requests, one detail follow-up.",
+    "note": "Path (c) of the Session-9 Part-2 plan: Citi (BB) early-careers Workday site citi.wd5 / site '2' (the site segment is literally '2'; front-end jobs.citi.com is Phenom over this Workday). searchText='Summer Analyst Program' is free-text (Citi exposes no dedicated early-careers facet; its jobFamilyGroup 'Management Development Programs' is BANAMEX retail-heavy, not IB analyst programmes). Like any Workday free-text search this raw response ALSO returns some lateral/VP roles where the words matched a description; UNLIKE the Barclays 'graduate' capture it genuinely SURFACES a multi-office early-careers programme: the 'Summer Analyst Program' spans Sydney, Melbourne, New York, Budapest, Tokyo, Dubai, Mississauga and Manila, and includes the same-region multi-office shape (Corporate Advisory Summer Analyst in BOTH Sydney and Melbourne -> both APAC). jobPostings aggregates the paginated listing pages VERBATIM; the listing is shallow (title/externalPath/locationsText/postedOn/bulletFields). example_detail is ONE verbatim per-posting follow-up (GET .../{externalPath})."
+  },
+  "total": 46,
+  "jobPostings": [
+    {
+      "title": "Summer Analyst Program – Services - Summer Analyst, Sydney Australia (APAC) - 2026",
+      "externalPath": "/job/Sydney-New-South-Wales-Australia/Summer-Analyst-Program---Services---Summer-Analyst--Sydney-Australia--APAC----2026_26952829",
+      "locationsText": "Sydney New South Wales Australia",
+      "postedOn": "Posted 12 Days Ago",
+      "bulletFields": [
+        "26952829"
+      ]
+    },
+    {
+      "title": "Summer Analyst Program - Markets - Summer Analyst, Sydney Australia (APAC) - 2026",
+      "externalPath": "/job/Sydney-New-South-Wales-Australia/Summer-Analyst-Program---Markets---Summer-Analyst--Sydney-Australia--APAC----2026_26952828",
+      "locationsText": "Sydney New South Wales Australia",
+      "postedOn": "Posted 12 Days Ago",
+      "bulletFields": [
+        "26952828"
+      ]
+    },
+    {
+      "title": "Services - Summer Analyst Program, New York City - US, 2027",
+      "externalPath": "/job/New-York-New-York-United-States/Services---Summer-Analyst-Program--New-York-City---US--2027_26945311",
+      "locationsText": "New York New York United States",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "26945311"
+      ]
+    },
+    {
+      "title": "Summer Analyst Program – Corporate Bank - Summer Analyst, Sydney Australia (APAC) - 2026",
+      "externalPath": "/job/Sydney-New-South-Wales-Australia/Summer-Analyst-Program---Corporate-Bank---Summer-Analyst--Sydney-Australia--APAC----2026_26952024",
+      "locationsText": "Sydney New South Wales Australia",
+      "postedOn": "Posted 12 Days Ago",
+      "bulletFields": [
+        "26952024"
+      ]
+    },
+    {
+      "title": "Summer Analyst Program – Commercial Banking - Summer Analyst, Sydney Australia (APAC) - 2026",
+      "externalPath": "/job/Sydney-New-South-Wales-Australia/Summer-Analyst-Program---Commercial-Banking---Summer-Analyst--Sydney-Australia--APAC----2026_26952021",
+      "locationsText": "Sydney New South Wales Australia",
+      "postedOn": "Posted 12 Days Ago",
+      "bulletFields": [
+        "26952021"
+      ]
+    },
+    {
+      "title": "Summer Analyst Program – Capital Markets - Summer Analyst, Sydney Australia (APAC) - 2026",
+      "externalPath": "/job/Sydney-New-South-Wales-Australia/Summer-Analyst-Program---Equity-Capital-Markets---Summer-Analyst--Sydney-Australia--APAC----2026_26952015",
+      "locationsText": "Sydney New South Wales Australia",
+      "postedOn": "Posted 12 Days Ago",
+      "bulletFields": [
+        "26952015"
+      ]
+    },
+    {
+      "title": "Summer Analyst Program - Corporate Advisory - Summer Analyst, Sydney  Australia (APAC) - 2026",
+      "externalPath": "/job/Sydney-New-South-Wales-Australia/Summer-Analyst-Program---Corporate-Advisory---Summer-Analyst--Sydney--Australia--APAC----2026_26955585",
+      "locationsText": "Sydney New South Wales Australia",
+      "postedOn": "Posted 12 Days Ago",
+      "bulletFields": [
+        "26955585"
+      ]
+    },
+    {
+      "title": "Summer Analyst Program - Corporate Advisory - Summer Analyst, Melbourne Australia (APAC) - 2026",
+      "externalPath": "/job/Melbourne-Victoria-Australia/Summer-Analyst-Program---Corporate-Advisory---Summer-Analyst--Melbourne-Australia--APAC----2026_26953539",
+      "locationsText": "Melbourne Victoria Australia",
+      "postedOn": "Posted 11 Days Ago",
+      "bulletFields": [
+        "26953539"
+      ]
+    },
+    {
+      "title": "2025 Wealth Management Summer Internship, Dubai, UAE (UAE Nationals preferred)",
+      "externalPath": "/job/Dubai-United-Arab-Emirates/XMLNAME-2025-Wealth-Management-Summer-Internship--Dubai--UAE--UAE-Nationals-preferred-_25820546",
+      "locationsText": "Dubai United Arab Emirates",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "25820546"
+      ]
+    },
+    {
+      "title": "Functions - Internal Audit, Summer Analyst - Mississauga, ON 2027",
+      "externalPath": "/job/Mississauga-Ontario-Canada/Functions---Internal-Audit--Summer-Analyst---Mississauga--ON-2027_26951380",
+      "locationsText": "Mississauga Ontario Canada",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "26951380"
+      ]
+    },
+    {
+      "title": "Enterprise Operations & Technology  Summer Analyst (Internship), Philippines",
+      "externalPath": "/job/Taguig--Philippines/Enterprise-Operations---Technology--Summer-Analyst--Internship---Philippines_25855095-1",
+      "locationsText": "Taguig  Philippines",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "25855095"
+      ]
+    },
+    {
+      "title": "Technology - Cybersecurity, Summer Analyst, Hungary - Budapest, 2026",
+      "externalPath": "/job/Budapest--Hungary/Technology---Cybersecurity--Summer-Analyst--Budapest--2026_25921949",
+      "locationsText": "Budapest  Hungary",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "25921949"
+      ]
+    },
+    {
+      "title": "Technology - Infrastructure, Summer Analyst, Hungary - Budapest, 2026",
+      "externalPath": "/job/Budapest--Hungary/Technology---Infrastructure--Summer-Analyst--Hungary---Budapest--2026_25921946",
+      "locationsText": "Budapest  Hungary",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "25921946"
+      ]
+    },
+    {
+      "title": "Markets - Quantitative Analysis, Summer Analyst - New York City - US, 2027",
+      "externalPath": "/job/New-York-New-York-United-States/Markets---Quantitative-Analysis--Summer-Analyst---New-York-City---US--2027_25928747",
+      "locationsText": "New York New York United States",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "25928747"
+      ]
+    },
+    {
+      "title": "Markets - Sales and Trading, Summer Analyst, New York City - US, 2027",
+      "externalPath": "/job/New-York-New-York-United-States/Markets---Sales-and-Trading--Summer-Analyst--New-York-City---US--2027_25928736",
+      "locationsText": "New York New York United States",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "25928736"
+      ]
+    },
+    {
+      "title": "2028卒 投資銀行部門 Summer Job／Japan Investment Banking Summer Job",
+      "externalPath": "/job/Chiyoda-ku-Tokyo-Japan/XMLNAME-2028--Summer-Job-Japan-Investment-Banking-Summer-Job_26958395",
+      "locationsText": "Chiyoda-ku Tokyo Japan",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "26958395"
+      ]
+    },
+    {
+      "title": "2028年卒 市場部門 Summer Workshop 2026/Japan Markets Summer Workshop 2026 (Class of 2028)",
+      "externalPath": "/job/Chiyoda-ku-Tokyo-Japan/XMLNAME-2028--Summer-Workshop-2026-Japan-Markets-Summer-Workshop-2026--Class-of-2028-_26959074-1",
+      "locationsText": "Chiyoda-ku Tokyo Japan",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "26959074"
+      ]
+    },
+    {
+      "title": "2028卒 コーポレート・バンキングサマーセミナー Japan Corporate Banking Summer Seminar",
+      "externalPath": "/job/Chiyoda-ku-Tokyo-Japan/Japan-Corporate-Banking-Summer-Seminar_26952781",
+      "locationsText": "Chiyoda-ku Tokyo Japan",
+      "postedOn": "Posted 13 Days Ago",
+      "bulletFields": [
+        "26952781"
+      ]
+    },
+    {
+      "title": "Senior Tableau Developer - Assistant Vice President",
+      "externalPath": "/job/Pune-Maharashtra-India/Senior-Tableau-Developer---Assistant-Vice-President_26957077",
+      "locationsText": "Pune Maharashtra India",
+      "postedOn": "Posted 24 Days Ago",
+      "bulletFields": [
+        "26957077"
+      ]
+    },
+    {
+      "title": "Regulatory Reporting Lead Analyst",
+      "externalPath": "/job/Budapest--Hungary/Regulatory-Reporting-Lead-Analyst_26938694",
+      "locationsText": "Budapest  Hungary",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "26938694"
+      ]
+    },
+    {
+      "title": "Intelligence Intermediate Analyst - Officer - Singapore",
+      "externalPath": "/job/Singapore--Singapore/Intelligence-Intermediate-Analyst---Officer---Singapore_25899956",
+      "locationsText": "Singapore  Singapore",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "25899956"
+      ]
+    },
+    {
+      "title": "Regulatory Reporting, Intermediate Analyst, Officer",
+      "externalPath": "/job/Mumbai-Maharashtra-India/Regulatory-Reporting--Intermediate-Analyst--Officer_26929937",
+      "locationsText": "Mumbai Maharashtra India",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "26929937"
+      ]
+    },
+    {
+      "title": "Apps Dev Tech Sr Lead Analyst",
+      "externalPath": "/job/Jersey-City-New-Jersey-United-States/Apps-Dev-Tech-Sr-Lead-Analyst_26960756",
+      "locationsText": "Jersey City New Jersey United States",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "26960756"
+      ]
+    },
+    {
+      "title": "Information Security Senior Analyst",
+      "externalPath": "/job/Irving-Texas-United-States/Information-Security-Senior-Analyst_26969766-1",
+      "locationsText": "Irving Texas United States",
+      "postedOn": "Posted 3 Days Ago",
+      "bulletFields": [
+        "26969766"
+      ]
+    },
+    {
+      "title": "US regulatory report FR Y-14 Lead Analyst- Vice President",
+      "externalPath": "/job/Mumbai-Maharashtra-India/Regulatory-Reporting-Lead-Analyst--Vice-President_26929931",
+      "locationsText": "Mumbai Maharashtra India",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "26929931"
+      ]
+    },
+    {
+      "title": "US regulatory report FR Y-14 Senior Analyst- Assistant Vice President",
+      "externalPath": "/job/Mumbai-Maharashtra-India/Regulatory-Reporting-Senior-Analyst--Assistant-Vice-President_26929935",
+      "locationsText": "Mumbai Maharashtra India",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "26929935"
+      ]
+    },
+    {
+      "title": "Execution and Relationship Management - HR & ESPA",
+      "externalPath": "/job/Heredia--Costa-Rica/Execution-and-Relationship-Management---HR---ESPA_26970495",
+      "locationsText": "Heredia  Costa Rica",
+      "postedOn": "Posted Today",
+      "bulletFields": [
+        "26970495"
+      ]
+    },
+    {
+      "title": "FP & A Sr. Lead Analyst S.V.P. - C14 - NEW YORK",
+      "externalPath": "/job/New-York-New-York-United-States/FP---A-Sr-Lead-Analyst-SVP---C14---NEW-YORK_25840151-1",
+      "locationsText": "New York New York United States",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "25840151"
+      ]
+    },
+    {
+      "title": "Portfolio Credit Risk Management 2nd Line of Defense Lead Analyst",
+      "externalPath": "/job/Warsaw--Poland/Portfolio-Credit-Risk-Management-2nd-Line-of-Defense-Lead-Analyst_25918352",
+      "locationsText": "Warsaw  Poland",
+      "postedOn": "Posted 25 Days Ago",
+      "bulletFields": [
+        "25918352"
+      ]
+    },
+    {
+      "title": "AI and Application development Engineer- Assistant Vice President",
+      "externalPath": "/job/Pune-Maharashtra-India/AI-and-Application-development-Engineer--Assistant-Vice-President_26954557",
+      "locationsText": "Pune Maharashtra India",
+      "postedOn": "Posted 14 Days Ago",
+      "bulletFields": [
+        "26954557"
+      ]
+    },
+    {
+      "title": "Business Analytics Lead Analyst, VP - Product & Portfolio Analytics | USCC Partnership Cards",
+      "externalPath": "/job/Atlanta-Georgia-United-States/Business-Analytics-Lead-Analyst--VP---Product---Portfolio-Analytics---USCC-Partnership-Cards_26969088-1",
+      "locationsText": "2 Locations",
+      "postedOn": "Posted 11 Days Ago",
+      "bulletFields": [
+        "26969088"
+      ]
+    },
+    {
+      "title": "Vice President - Third Party Resilience 2nd LOD Lead Analyst - Risk Management (Hybrid)",
+      "externalPath": "/job/Tampa-Florida-United-States/Vice-President---Third-Party-Resilience-2nd-LOD-Lead-Analyst---Risk-Management--Hybrid-_26967091-1",
+      "locationsText": "Tampa Florida United States",
+      "postedOn": "Posted 12 Days Ago",
+      "bulletFields": [
+        "26967091"
+      ]
+    },
+    {
+      "title": "VP, Controllers Transformation Governance (Hybrid)",
+      "externalPath": "/job/Tampa-Florida-United-States/VP--Controllers-Transformation-Governance--Hybrid-_25863735",
+      "locationsText": "Tampa Florida United States",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "25863735"
+      ]
+    },
+    {
+      "title": "Apps Dev Tech Lead Analyst",
+      "externalPath": "/job/Jersey-City-New-Jersey-United-States/Apps-Dev-Tech-Lead-Analyst_26960748",
+      "locationsText": "Jersey City New Jersey United States",
+      "postedOn": "Posted 26 Days Ago",
+      "bulletFields": [
+        "26960748"
+      ]
+    },
+    {
+      "title": "Apps Dev Tech Lead Analyst",
+      "externalPath": "/job/Jersey-City-New-Jersey-United-States/Apps-Dev-Tech-Lead-Analyst_26960744",
+      "locationsText": "Jersey City New Jersey United States",
+      "postedOn": "Posted 26 Days Ago",
+      "bulletFields": [
+        "26960744"
+      ]
+    },
+    {
+      "title": "Counterparty Credit Risk, Funds Underwriting (Vice President, NY)",
+      "externalPath": "/job/Getzville-New-York-United-States/Counterparty-Credit-Risk-Officer---Funds--VicePresident-_26948825-1",
+      "locationsText": "Getzville New York United States",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "26948825"
+      ]
+    },
+    {
+      "title": "Apps Dev Tech Lead Analyst -Vice President",
+      "externalPath": "/job/Pune-Maharashtra-India/Apps-Dev-Tech-Lead-Analyst--Vice-President_26968105",
+      "locationsText": "Pune Maharashtra India",
+      "postedOn": "Posted Today",
+      "bulletFields": [
+        "26968105"
+      ]
+    },
+    {
+      "title": "Anti Money Laundering Analyst (UAE National Only)",
+      "externalPath": "/job/Dubai-United-Arab-Emirates/Anti-Money-Laundering-Analyst--UAE-National-Only-_24797695-1",
+      "locationsText": "Dubai United Arab Emirates",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "24797695"
+      ]
+    },
+    {
+      "title": "Vice President - Country Risk Officer - Risk Management (Hybrid)",
+      "externalPath": "/job/Irving-Texas-United-States/Vice-President---Country-Risk-Officer---Risk-Management--Hybrid-_26965005",
+      "locationsText": "Irving Texas United States",
+      "postedOn": "Posted 25 Days Ago",
+      "bulletFields": [
+        "26965005"
+      ]
+    },
+    {
+      "title": "Head of Applied AI Engineering",
+      "externalPath": "/job/Jersey-City-New-Jersey-United-States/Head-of-Applied-AI-Engineering_26954694",
+      "locationsText": "Jersey City New Jersey United States",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "26954694"
+      ]
+    },
+    {
+      "title": "Senior Java Software Engineer, Vice President",
+      "externalPath": "/job/Irving-Texas-United-States/Senior-Java-Software-Engineer--Vice-President_26947339",
+      "locationsText": "Irving Texas United States",
+      "postedOn": "Posted 28 Days Ago",
+      "bulletFields": [
+        "26947339"
+      ]
+    },
+    {
+      "title": "Senior Applied AI Engineer (Capital Markets / M&A)",
+      "externalPath": "/job/Mississauga-Ontario-Canada/Senior-Applied-AI-Engineer--Capital-Markets---M-A-_26956859",
+      "locationsText": "Mississauga Ontario Canada",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "26956859"
+      ]
+    },
+    {
+      "title": "AI + Lead application Architecture -Vice President",
+      "externalPath": "/job/Pune-Maharashtra-India/AI---Lead-application-Architecture--Vice-President_26968078",
+      "locationsText": "Pune Maharashtra India",
+      "postedOn": "Posted Today",
+      "bulletFields": [
+        "26968078"
+      ]
+    },
+    {
+      "title": "AI +  Application Dev Tech Lead / Architect - Vice President",
+      "externalPath": "/job/Pune-Maharashtra-India/AI----Application-Dev-Tech-Lead---Architect---Vice-President_26970027",
+      "locationsText": "Pune Maharashtra India",
+      "postedOn": "Posted Today",
+      "bulletFields": [
+        "26970027"
+      ]
+    },
+    {
+      "title": "Local Regulatory Reporting Head",
+      "externalPath": "/job/Bogota--Colombia/Local-Regulatory-Reporting-Head_26959293-1",
+      "locationsText": "Bogota  Colombia",
+      "postedOn": "Posted 13 Days Ago",
+      "bulletFields": [
+        "26959293"
+      ]
+    },
+    {
+      "title": "Python Developer, Assistant Vice President",
+      "externalPath": "/job/Jacksonville-Florida-United-States/Python-Developer--Assistant-Vice-President_26941889-1",
+      "locationsText": "Jacksonville Florida United States",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "26941889"
+      ]
+    }
+  ],
+  "example_detail": {
+    "jobPostingInfo": {
+      "id": "a29bec82e5c1100351856635d2120000",
+      "title": "Summer Analyst Program - Corporate Advisory - Summer Analyst, Sydney  Australia (APAC) - 2026",
+      "jobDescription": "<p><b>You&#39;re the brains behind our work!</b></p><p></p><p>You&#39;re ready to bring your knowledge from the classroom to the boardroom, and Citi wants to help you get there. Whether it&#39;s honing your skills or building your network. We know that success can&#39;t come without growth. Our summer internship programs equip you with the knowledge and training you need to play a valuable role on your team and establish a long-term career here. At Citi, we value internal mobility, and career growth is not a question of if, but when.</p><p></p><p>Citi’s Corporate Advisory division is a leading provider of financial services to top-tier multi-national clients around the globe, serving the financial needs of the world&#39;s preeminent corporations, governments and financial institutions.</p><p></p><p>Citi’s Summer Analyst Program is a 10-week program dedicated to giving future business leaders a complete view of Citi&#39;s Corporate Advisory business through hands-on experience:</p><ul><li><p>Extensive training program to gain the fundamental skills of a Summer Analyst role</p></li><li><p>Assignments equivalent to full-time responsibilities</p></li><li><p>You will develop the core skills required of a full-time analyst and gain direct exposure on deals and transactions</p></li></ul><p></p><p><span>Top performing Summer Analysts will be hired to join the following year’s Graduate Analyst Program <b>in 2028.</b></span></p><p></p><p>We&#39;re looking for motivated individuals, who are eager to grow their careers in Corporate Advisory. Successful candidates take pride in all aspects of their work and recognize that it is a reflection not just of the firm; but of themselves. </p><p></p><p><b>We want to hear from you if: </b></p><ul><li><p>You&#39;re a penultimate or final year student with strong academic achievement in a wide variety of disciplines.</p></li><li><p>From Business to STEM, Arts and Law; we encourage you to find your fit.</p></li><li><p>You have demonstrated strong leadership; teamwork; and communication skills</p></li><li><p>Passionate about finance and have a genuine interest to learn</p></li><li><p>Enthusiasm for contributing to the Citi community; through teamwork; leadership; and mentoring </p></li><li><p>Commitment to their own personal success and the success of the institution </p></li><li><p>Ability to win and sustain the loyalty of institutional clients with confidence and good judgment. </p></li><li><p>Intellectual curiosity and proactive approach to searching for new and creative ideas to implement innovative strategies.</p></li></ul><p></p><p><b>Applications will only be accepted and reviewed if the below are included:</b></p><p>- Updated CV (including your ATAR/GPA/WAM)</p><p>- Cover letter addressed to Citi</p><p>- Academic Transcript</p><p>- ATAR score is required to be included in your CV or as a separate document</p><p></p><p>Applications are reviewed on a rolling basis; therefore, early application is highly encouraged!</p><p></p><p><b>Important: </b>Applicants will only be considered if all above documents are included upon submission. Please upload your Resume, Cover Letter and Academic Transcript under the <i>&#39;Resume/CV&#39; </i>document section in the application form.</p><p style=\"text-align:inherit\"><span><span><span><span><span><span><span><span><span><span><span><span class=\"WHR0\">------------------------------------------------------</span></span></span></span></span></span></span></span></span></span></span></span></p><h2><b>Job Family Group: </b></h2>Institutional Banking<p style=\"text-align:inherit\"><span><span><span><span><span><span><span><span><span><span><span><span class=\"WHR0\">------------------------------------------------------</span></span></span></span></span></span></span></span></span></span></span></span></p><h2><b>Job Family:</b></h2>Investment Banking<p style=\"text-align:inherit\"><span><span><span><span><span><span><span><span class=\"WHR0\">------------------------------------------------------</span></span></span></span></span></span></span></span></p><h2><b>Time Type:</b></h2>Full time<p style=\"text-align:inherit\"><span><span class=\"WHP0\">------------------------------------------------------</span></span></p><h2><b>Most Relevant Skills </b></h2>Please see the requirements listed above.<p>------------------------------------------------------</p><h2><b>Other Relevant Skills </b></h2>For complementary skills, please see above and/or contact the recruiter.<p>------------------------------------------------------</p><p style=\"text-align:left\"><i><span>Citi is an equal opportunity employer, and qualified candidates will receive consideration without regard to their race, color, religion, sex, sexual orientation, gender identity, national origin, disability, status as a protected veteran, or any other characteristic protected by law.</span></i></p><p style=\"text-align:inherit\"><i><span> </span></i></p><p style=\"text-align:left\"><i><span>If you are a person with a disability and need a reasonable accommodation to use our search tools and/or apply for a career opportunity review </span></i><i><a href=\"https://www.citigroup.com/citi/accessibility/application-accessibility.htm\" target=\"_blank\">Accessibility at Citi</a><span>.</span></i><br /><br /><i><span>View Citi’s </span><a href=\"https://www.citigroup.com/global/eeo-aa-policy\" target=\"_blank\">EEO Policy Statement</a><span> and the </span><a href=\"https://www.eeoc.gov/sites/default/files/2023-06/22-088_EEOC_KnowYourRights6.12ScreenRdr.pdf\" target=\"_blank\">Know Your Rights</a><span> poster.</span></i></p>",
+      "location": "Sydney New South Wales Australia",
+      "postedOn": "Posted 12 Days Ago",
+      "startDate": "2026-06-03",
+      "timeType": "Full time",
+      "jobReqId": "26955585",
+      "jobPostingId": "Summer-Analyst-Program---Corporate-Advisory---Summer-Analyst--Sydney--Australia--APAC----2026_26955585",
+      "jobPostingSiteId": "2",
+      "country": {
+        "descriptor": "Australia",
+        "id": "d903bb3fedad45039383f6de334ad4db"
+      },
+      "canApply": true,
+      "posted": true,
+      "includeResumeParsing": true,
+      "jobRequisitionLocation": {
+        "descriptor": "2 PARK STREET  SYDNEY",
+        "country": {
+          "descriptor": "Australia",
+          "id": "d903bb3fedad45039383f6de334ad4db",
+          "alpha2Code": "AU"
+        }
+      },
+      "externalUrl": "https://citi.wd5.myworkdayjobs.com/2/job/Sydney-New-South-Wales-Australia/Summer-Analyst-Program---Corporate-Advisory---Summer-Analyst--Sydney--Australia--APAC----2026_26955585",
+      "questionnaireId": "ca21de088a1c1034f93a320d07f50000",
+      "secondaryQuestionnaireId": "e32326e1708d019cfe524483f4005ea5"
+    },
+    "hiringOrganization": {
+      "name": "06553 Citigroup Global Markets Australia Pty Limited",
+      "url": ""
+    },
+    "similarJobs": [
+      {
+        "title": "Summer Analyst Program – Capital Markets - Summer Analyst, Sydney Australia (APAC) - 2026",
+        "externalPath": "/job/Sydney-New-South-Wales-Australia/Summer-Analyst-Program---Equity-Capital-Markets---Summer-Analyst--Sydney-Australia--APAC----2026_26952015",
+        "timeType": "Full time",
+        "locationsText": "Sydney New South Wales Australia",
+        "postedOn": "Posted 12 Days Ago",
+        "startDate": "2026-06-03"
+      }
+    ],
+    "userAuthenticated": false
+  }
+}

@@ -46,3 +46,27 @@ sources:
       # if/when the facet ids are confirmed.
       search_text: graduate
     polling_notes: "Daily. Workday paginated POST + per-posting detail follow-up. tenant=barclays dc=wd3 site=External_Career_Site_Barclays."
+  - firm_name: Citi
+    # Second real IB BB. Confirmed Workday tenant from the Session 7 table; the early-
+    # careers board is citi.wd5 with the site segment literally "2" (front-end
+    # jobs.citi.com is Phenom over this Workday). Added in Session 9 (Part 2) for the
+    # [OPEN] dedup-key region-grain revisit: UNLIKE Barclays' free-text "graduate"
+    # capture, this site DOES surface a genuine multi-office early-careers programme
+    # (Summer Analyst Program across Sydney/Melbourne/New York/Budapest/Tokyo/Dubai/
+    # Mississauga/Manila). See ingestion/tests/fixtures/workday_citi_earlycareers.json.
+    # DISABLED: captured as a fixture for the future revisit; not polled yet (rule 7).
+    firm_tier: BB
+    ats_type: workday
+    endpoint_or_url: citi
+    region_scope: global
+    enabled: false
+    config:
+      dc: wd5
+      site: "2"
+      # Free-text early-careers filter. Citi exposes no dedicated early-careers facet
+      # (its jobFamilyGroup "Management Development Programs" is BANAMEX retail-heavy),
+      # so "Summer Analyst Program" is the cleanest signal that surfaces the genuine
+      # multi-office analyst programme. Like any Workday free-text search it also
+      # returns some lateral roles; the multi-office early-careers shape is present.
+      search_text: "Summer Analyst Program"
+    polling_notes: "DISABLED. Workday tenant=citi dc=wd5 site=2. Captured for the dedup-key region-grain revisit (Session 9 Part 2); enable when that session runs."

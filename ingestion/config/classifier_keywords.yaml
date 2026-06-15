@@ -25,8 +25,14 @@ division:
 
 # region: normalized from the posting location string. No match -> unknown.
 # UK is listed before EMEA so UK cities win over the European catch-all.
+# Matching is word-boundary aware (the campus/Belarus precedent), so short tokens
+# like "us"/"uk"/"ny" never match inside unrelated words. Cities were added to close
+# the Session-8 coverage gap: real offices appearing in the captured fixtures
+# (greenhouse_point72, lever_wealthfront, workday_barclays) were falling to `unknown`
+# — chiefly the Indian (Pune/Noida/Chennai/Gurugram/Hyderabad) and Czech (Prague)
+# Workday offices, plus Taiwan/Florida/Miami/Palo Alto from the JSON boards.
 region:
-  UK: ["united kingdom", "uk", "london", "england", "scotland", "edinburgh", "manchester", "birmingham", "glasgow", "leeds"]
-  US: ["united states", "usa", "us", "new york", "stamford", "chicago", "boston", "san francisco", "los angeles", "houston", "ny", "ct"]
-  APAC: ["singapore", "hong kong", "japan", "tokyo", "india", "bengaluru", "bangalore", "mumbai", "shanghai", "beijing", "sydney", "australia", "seoul", "korea", "asia", "china"]
-  EMEA: ["emea", "europe", "warsaw", "poland", "paris", "france", "frankfurt", "germany", "dublin", "ireland", "madrid", "spain", "amsterdam", "netherlands", "milan", "italy", "zurich", "geneva", "switzerland", "dubai", "uae", "middle east", "africa", "stockholm", "sweden"]
+  UK: ["united kingdom", "uk", "london", "england", "scotland", "edinburgh", "manchester", "birmingham", "glasgow", "leeds", "belfast"]
+  US: ["united states", "usa", "us", "new york", "stamford", "chicago", "boston", "san francisco", "los angeles", "houston", "ny", "ct", "miami", "florida", "palo alto", "california"]
+  APAC: ["singapore", "hong kong", "japan", "tokyo", "india", "bengaluru", "bangalore", "mumbai", "pune", "noida", "chennai", "gurugram", "gurgaon", "hyderabad", "shanghai", "beijing", "sydney", "australia", "seoul", "korea", "asia", "china", "taiwan"]
+  EMEA: ["emea", "europe", "warsaw", "poland", "paris", "france", "frankfurt", "germany", "dublin", "ireland", "madrid", "spain", "amsterdam", "netherlands", "milan", "italy", "zurich", "geneva", "switzerland", "dubai", "uae", "middle east", "africa", "stockholm", "sweden", "prague", "czech republic", "czechia"]

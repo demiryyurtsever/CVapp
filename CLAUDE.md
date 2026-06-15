@@ -101,21 +101,30 @@ adapter is cheap; a wrong guess about the schema or a locked decision is expensi
 ## Current status / where to continue
 
 See `docs/PROGRESS.md` for the authoritative, per-session build log. As of the last entry
-(Session 8):
+(Session 9):
 
 - **Done:** the ingestion layer end-to-end on fixtures — canonical schema
   (`ingestion/models.py`), the shared adapter interface (`ingestion/adapters/base.py`),
   source registry + loader (with an optional `config` block for ATS-specific quirks), the
   §3.8 classifiers, **three live adapters (Greenhouse + Lever + Workday)**, the pipeline
   orchestrator with §3.9 dedup/change-detection, Postgres storage (driven on SQLite in
-  tests) + the Alembic `0001` migration, and fixture-only tests. **76 tests green.** The
-  registry holds its first real IB target (Barclays, a BB, on Workday); Point72/GH and
-  Wealthfront/Lever remain non-IB reference boards. The Workday `[OPEN]` §8.2 tenant
-  variation was handled by **config, not subclasses** (a proposal, not a lock). The §3.9
-  dedup key remains **locked**; the region-grain revisit (`[OPEN]` §8.2) is deferred and
-  Session 8 left the measurement evidence it needs (Barclays fixture collapses 23 → 21; the
-  2 collapses are same-office duplicates, not region-flattening — see PROGRESS.md).
-- **Next session:** the daily scheduler around `run_ingestion()` (§3.7; `[OPEN]` APScheduler
-  vs Celery, §8.2), OR the dedup-key region-grain revisit (needs a true multi-office UK
-  early-careers Workday capture + region-keyword coverage for missing cities first). Do not
-  start work ahead of its session prompt (standing rule 7).
+  tests) + the Alembic `0001` migration, and fixture-only tests. **89 tests green.** The
+  registry holds two real IB BBs on Workday — **Barclays** (enabled) and **Citi** (added
+  Session 9, **disabled**: its `workday_citi_earlycareers.json` fixture is captured for the
+  region-grain revisit, not polled yet); Point72/GH and Wealthfront/Lever remain non-IB
+  reference boards. The Workday `[OPEN]` §8.2 tenant variation was handled by **config, not
+  subclasses** (a proposal, not a lock).
+- **Session 9 (prep, no production logic changed):** closed the §3.8 region keyword gap —
+  the classifier now covers every office in all three existing fixtures (0 `unknown`; 22
+  postings moved off `unknown`). The dedup key stays **locked**; closing the gap re-shared
+  one Greenhouse same-region pair, so the *measured* fixture collapse moved 233→232 unique
+  (constants re-synced in tests, key unchanged). Captured a real **multi-office early-careers
+  Workday fixture** (Citi `citi.wd5` / site `2`: "Summer Analyst Program" across Sydney/
+  Melbourne/NY/Tokyo/Dubai/Budapest/Mississauga/Manila — incl. the same-region Sydney+
+  Melbourne shape) — the evidence the region-grain revisit was missing. Barclays' own
+  Workday paths (job-family facet; a separate early-careers site) were checked and do **not**
+  expose a multi-office grad programme (recorded in PROGRESS.md).
+- **Next session:** the dedup-key region-grain revisit (`[OPEN]` §8.2) is now unblocked —
+  drive it off `workday_citi_earlycareers.json`. OR the daily scheduler around
+  `run_ingestion()` (§3.7; `[OPEN]` APScheduler vs Celery, §8.2). Do not start work ahead of
+  its session prompt (standing rule 7).

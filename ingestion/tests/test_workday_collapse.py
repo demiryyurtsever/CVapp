@@ -21,12 +21,19 @@ Zero genuinely-distinct office/city openings were flattened by region on this sl
 
 Why the predicted region-flattening is NOT exercised here (recorded for the revisit):
 this Barclays external site is lateral/experienced-role heavy and Workday free-text
-"graduate" search returns mostly India-based roles with distinct titles; and the
-region classifier currently maps several cities (Pune/Noida/Chennai/Prague) to
-``unknown`` (a config gap), so even repeated titles do not all share a region. To
-properly stress-test the region grain the revisit wants a true multi-office UK
-early-careers programme (e.g. a Summer Analyst across London/Glasgow/Belfast),
-which this site's free-text early-careers search did not surface. See docs/PROGRESS.md.
+"graduate" search returns mostly India-based roles with distinct titles. To properly
+stress-test the region grain the revisit wants a true multi-office UK early-careers
+programme (e.g. a Summer Analyst across London/Glasgow/Belfast), which this site's
+free-text early-careers search did not surface. See docs/PROGRESS.md.
+
+Update (Session 9): the region keyword-config gap noted above is now CLOSED —
+Pune/Noida/Chennai map to APAC and Prague to EMEA (see classifier_keywords.yaml).
+This does NOT change the measured collapse: the surviving "Third Party Risk Manager"
+triplicate is a *same-office* (Noida) duplicate, so its three rows now share
+region=APAC instead of region=unknown and still collapse 3 -> 1. found 23 / unique
+21 / collapsed 2 is unchanged; only the collapsed group's region label moved off
+`unknown`. The fixture still contains no genuine *multi-office* early-careers
+programme — that capture is Part 2's job (see docs/PROGRESS.md, Session 9).
 """
 
 from __future__ import annotations

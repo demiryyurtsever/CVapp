@@ -39,11 +39,14 @@ GH_FIXTURE = Path(__file__).parent / "fixtures" / "greenhouse_point72.json"
 LEV_FIXTURE = Path(__file__).parent / "fixtures" / "lever_wealthfront.json"
 
 # Known properties of the two fixtures under the locked §3.9 dedup key
-# (see docs/PROGRESS.md sessions 4 and 5).
-GH_FOUND, GH_UNIQUE, GH_COLLAPSED = 249, 233, 16
+# (see docs/PROGRESS.md sessions 4, 5 and 9). Session 9 closed a region keyword
+# gap (Taiwan/Florida/Miami no longer `unknown`), re-sharing one more Greenhouse
+# same-region pair: GH 233/16 -> 232/17. Lever is unaffected (Palo Alto -> US, but
+# those rows already did not collapse). The dedup key is unchanged.
+GH_FOUND, GH_UNIQUE, GH_COLLAPSED = 249, 232, 17
 LEV_FOUND, LEV_UNIQUE = 15, 15
 COMBINED_FOUND = GH_FOUND + LEV_FOUND          # 264
-COMBINED_NEW = GH_UNIQUE + LEV_UNIQUE          # 248
+COMBINED_NEW = GH_UNIQUE + LEV_UNIQUE          # 247
 
 T1 = datetime(2026, 6, 15, 9, 0, 0)
 T2 = datetime(2026, 6, 16, 9, 0, 0)

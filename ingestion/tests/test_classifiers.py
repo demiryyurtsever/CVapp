@@ -72,6 +72,50 @@ def test_region_mapping(location: str, expected: Region) -> None:
     assert map_region(location) == expected
 
 
+# Coverage gap closed in Session 9 (§3.8): these are the EXACT location strings that
+# appear in the three captured fixtures (greenhouse_point72 / lever_wealthfront /
+# workday_barclays) and used to fall to `unknown` because the keyword config had no
+# mapping for them. Asserting the real strings (not just bare city names) means a
+# future deletion of any of these region keywords fails this test LOUDLY, and proves
+# the actual fixture postings now classify instead of dropping to `unknown`.
+@pytest.mark.parametrize(
+    "location, expected",
+    [
+        # Indian Workday offices (workday_barclays.json) — Session 8 named these.
+        ("Pune, Gera Commerzone SEZ", Region.APAC),
+        ("Noida, Candor TechSpace", Region.APAC),
+        ("Chennai, DLF IT Park", Region.APAC),
+        # Other Indian cities Session 8 named (defensive, for future captures).
+        ("Gurugram", Region.APAC),
+        ("Gurgaon", Region.APAC),
+        ("Hyderabad", Region.APAC),
+        # Czech Workday office (workday_barclays.json).
+        ("Gemini Building B, Prague", Region.EMEA),
+        # Surfaced by the fixture audit on the JSON boards.
+        ("Taiwan", Region.APAC),  # greenhouse_point72
+        ("Florida", Region.US),  # greenhouse_point72
+        ("Miami", Region.US),  # greenhouse_point72
+        ("Palo Alto, CA", Region.US),  # lever_wealthfront (bare; no "US-based" tail)
+        # Belfast completes the London/Glasgow/Belfast multi-office UK shape the
+        # dedup region-grain revisit needs to stress (Glasgow/London already mapped).
+        ("Belfast", Region.UK),
+    ],
+)
+def test_previously_unknown_fixture_offices_now_classify(
+    location: str, expected: Region
+) -> None:
+    assert map_region(location) == expected
+    assert map_region(location) != Region.unknown
+
+
+def test_new_city_keywords_are_word_boundary_safe() -> None:
+    # The campus/Belarus precedent extended to the Session-9 additions: a city
+    # keyword must not match inside an unrelated longer word.
+    assert map_region("Puneville Holdings") == Region.unknown  # not "Pune"
+    assert map_region("Praguerie Festival Office") == Region.unknown  # not "Prague"
+    assert map_region("Floridaman Logistics") == Region.unknown  # not "Florida"
+
+
 def test_division_extraction_from_title_then_departments() -> None:
     assert extract_division("Cubist Quantitative Researcher Intern", ["Quant Management"]) == "Quant"
     assert (

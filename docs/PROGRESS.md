@@ -487,3 +487,125 @@ which now needs a true multi-office UK early-careers Workday capture (a facet-fi
 separate early-careers site) plus region-keyword coverage for the missing cities before it
 can decide whether the region grain needs city/office. After that, the tal.net/Oleeo
 cluster (§3.6, ~6 firms) and the cheap SmartRecruiters + Teamtailor JSON follow-ups.
+
+## Session 9 — PREP for the dedup-key region-grain revisit: region coverage + a real multi-office early-careers fixture (§3.8 / §3.9)
+
+A **prep** session that makes the future `[OPEN]` §8.2 dedup-key region-grain decision
+*measurable*. It did exactly two things and changed **no** production logic: it did NOT
+touch the dedup key, the §7 schema, the adapter interface, the pipeline lifecycle, or any
+locked decision. Part 1 = region keyword config + the tests the change touches; Part 2 =
+one new fixture (+ one disabled registry entry).
+
+### Part 1 — closed the region-classifier coverage gap (§3.8)
+
+**Audit.** Listed every distinct location string across all three fixtures
+(`greenhouse_point72`, `lever_wealthfront`, `workday_barclays`) and what it mapped to.
+Real offices were falling to `unknown`: **Taiwan** (×3), **Florida** (×1), **Miami** (×1)
+on Greenhouse; bare **Palo Alto, CA** (×3) on Lever; **Pune** (×8), **Noida** (×3),
+**Chennai** (×2) and **Prague** (×1) on the Barclays Workday fixture.
+
+**Fix (config only, rule 6).** Added to `ingestion/config/classifier_keywords.yaml`,
+word-boundary aware (the campus/Belarus precedent), case-insensitive:
+- **APAC:** `pune, noida, chennai, gurugram, gurgaon, hyderabad, taiwan` (Mumbai/Bengaluru/
+  Bangalore were already present — the Session-8-named Indian cities are now all covered).
+- **EMEA:** `prague, czech republic, czechia`.
+- **US:** `miami, florida, palo alto, california`.
+- **UK:** `belfast` (completes the London/Glasgow/**Belfast** multi-office UK shape the
+  revisit wants to stress; London/Glasgow already mapped).
+
+**Region-coverage delta:** **22 fixture postings moved off `unknown`** — Greenhouse 5
+(Taiwan ×3→APAC, Florida ×1→US, Miami ×1→US), Lever 3 (Palo Alto, CA ×3→US), Workday 14
+(Pune ×8 + Noida ×3 + Chennai ×2 →APAC, Prague ×1→EMEA). **Zero** distinct fixture
+location strings now fall to `unknown` (was 8 distinct strings / 22 postings).
+
+**Tests.** `test_classifiers.py` gained `test_previously_unknown_fixture_offices_now_classify`
+(asserts the **exact** fixture strings — e.g. `"Pune, Gera Commerzone SEZ"`,
+`"Gemini Building B, Prague"`, `"Palo Alto, CA"` — now classify, so deleting any mapping
+fails loudly) and `test_new_city_keywords_are_word_boundary_safe` (Puneville/Praguerie/
+Floridaman still → `unknown`). **76 → 89 tests.**
+
+**Ripple (re-synced measured constants — no logic changed, dedup key unchanged).** Closing
+the gap re-shared one more Greenhouse same-region pair, so the **measured** collapse shifted:
+- Greenhouse **233 → 232 unique** (collapsed **16 → 17**); combined GH+Lever **248 → 247**.
+  Updated the named constants + docstrings in `test_pipeline.py` and
+  `test_cross_source_dedup.py` (these are measured fixture properties à la Session 4's "233",
+  not the locked key).
+- Two adapter tests had assertions that *documented the gap*: `test_lever_adapter`
+  (`Android Engineer`/Palo Alto `unknown → US`) and `test_workday_adapter` (the Prague
+  grad `unknown → EMEA`). Both now assert the correct region.
+- `test_workday_collapse.py`: collapse is **still 23 → 21 / collapsed 2** — the surviving
+  "Third Party Risk Manager" triplicate is a *same-office* (Noida) duplicate, so its three
+  rows now share `region=APAC` instead of `region=unknown` and still collapse 3→1. Only the
+  collapsed group's region *label* moved off `unknown`; no assertion changed. Added a dated
+  Session-9 update note to its docstring (the "cities map to unknown" caveat is now closed).
+
+### Part 2 — captured a fixture that can actually stress the region grain (rule 5)
+
+Goal: a real multi-office early-careers programme (same grad/intern role across several
+cities under near-identical titles) that Barclays free-text "graduate" never surfaced.
+Tried the plan's paths in order, polite minimal requests (honest UA, 2s delay, §3.12):
+
+- **(a) Barclays Workday job-FAMILY / category facet — FAILED to surface a multi-office
+  programme.** Discovered the facets on `barclays.wd3 / External_Career_Site_Barclays`:
+  `workerSubType` has **1 Graduate + 1 Intern** of 1082; `jobFamilyGroup "Early Careers"`
+  holds **2** postings — and both are the **same single office** ("Gemini Building B,
+  Prague"). No multi-office programme on this site.
+- **(b) A separate Barclays early-careers Workday tenant/site — DOES NOT EXIST.** Eight
+  candidate site names under `barclays.wd3` all 404. The Phenom front-end
+  (`search.jobs.barclays`) "graduate" filter returns the *same* India-heavy roles (Third
+  Party Risk Manager ×3 Noida, Chennai/Mumbai/Pune devs) + the one Prague grad, all
+  applying back to the **same** `External_Career_Site_Barclays`. Barclays early-careers is
+  not a separate Workday board.
+- **(c) A different BB — Citi SUCCEEDED.** Morgan Stanley `ms.wd5 / External` is reachable
+  but experienced-heavy (4 interns of 1360; free-text "Summer Analyst"/"Graduate Program"
+  returns VP/Director lateral roles, same loose-search problem as Barclays) and exposes no
+  multi-office grad programme. **Citi** does: its early-careers Workday board is
+  `citi.wd5` with the site segment **literally `2`** (front-end `jobs.citi.com` is Phenom
+  over this Workday — which is why name-guesses 404'd). `searchText="Summer Analyst Program"`
+  surfaces a **genuine multi-office early-careers programme**.
+
+**Path that worked: (c). Firm/tenant/site/method: Citi (BB) / tenant `citi` / `wd5` / site
+`2` / free-text `"Summer Analyst Program"`** (Citi exposes no dedicated early-careers facet —
+its `jobFamilyGroup "Management Development Programs"` is BANAMEX retail-heavy, so free-text
+is the cleanest signal). Saved raw, unmodified JSON to
+`ingestion/tests/fixtures/workday_citi_earlycareers.json` (**46** listing postings across
+the paginated pages + **1** verbatim detail example, mirroring the Barclays fixture shape).
+
+**Span of the multi-office programme:** of the 46 raw postings, **18 are genuine
+early-careers** (Summer Analyst / Internship / Summer Job/Workshop/Seminar) across **8
+distinct cities** — APAC: **Sydney, Melbourne, Tokyo**; US: **New York**; EMEA: **Dubai**;
+plus Budapest, Mississauga, Manila. The **"Summer Analyst Program" repeats in BOTH Sydney
+and Melbourne (both → APAC)** — the same-region multi-office shape the revisit needs. (The
+free-text raw response, like Barclays', also includes ~28 lateral/VP matches; UNLIKE
+Barclays it genuinely contains the multi-office programme.) **New region gaps surfaced by
+this fixture — Budapest/Hungary, Mississauga/Canada, Taguig/Philippines → `unknown`** — were
+**flagged, not closed** here (out of Part 1's three-fixture scope; a future pass).
+
+**Registry.** Added a **disabled** Citi entry to `registry.yaml` (`enabled: false`,
+tenant=citi, dc=wd5, site="2") so the source is documented and wired for the revisit but is
+**not polled** (rule 7). Barclays remains the first/only *enabled* Workday entry, so the
+Workday adapter/collapse tests still target it.
+
+**Verify:**
+```powershell
+.\.venv\Scripts\python -m pytest -q          # 89 passed (was 76; +13 classifier assertions)
+.\.venv\Scripts\python -m pytest -q ingestion/tests/test_classifiers.py
+```
+Key tests: `test_previously_unknown_fixture_offices_now_classify`,
+`test_new_city_keywords_are_word_boundary_safe`, `test_workday_fixture_collapse_count`
+(still found 23 / new 21 / collapsed 2), `test_run1_inserts_unique_postings_as_new` (now
+232/17), `test_pipeline_runs_greenhouse_and_lever_together` (now 247 new / 17 collapsed).
+
+**State now:** region classifier covers every office in the three existing fixtures (0
+`unknown`); the dedup key, schema, adapters and pipeline logic are unchanged. The registry
+holds a captured, disabled second BB (Citi) whose `workday_citi_earlycareers.json` fixture
+contains a real multi-office early-careers programme — the evidence the `[OPEN]` region-grain
+revisit was missing. **89 tests green.**
+
+**Next session:** the **dedup-key region-grain revisit** (`[OPEN]` §8.2) is now unblocked —
+use `workday_citi_earlycareers.json` to measure how a multi-office programme behaves under
+the locked key (note Citi disambiguates by putting the city *in the title*, so its rows do
+not collapse under the current key — useful evidence on whether the grain or the title
+normalization is the lever). Optionally extend region coverage to the new gaps
+(Hungary/Canada/Philippines) first. Alternatively, the daily scheduler (§3.7; `[OPEN]`
+APScheduler vs Celery). Do not start ahead of the session prompt (rule 7).

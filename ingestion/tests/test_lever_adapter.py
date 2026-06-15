@@ -121,10 +121,11 @@ def test_derived_fields_use_the_shared_classifiers(postings: list[Posting]) -> N
     assert _by_title(postings, "Android Engineer").division == "Technology"
     assert _by_title(postings, "Brokerage Operations Specialist").division == "Operations"
     assert _by_title(postings, "Corporate Counsel").division == "Compliance"
-    # region: a US-remote location resolves to US; a bare "Palo Alto, CA" does not
-    # match any region keyword and is honestly left unknown (a config gap, not code).
+    # region: both a US-remote location and a bare "Palo Alto, CA" resolve to US.
+    # (Session 9 closed the region keyword gap: "palo alto"/"california" were added,
+    # so a bare "Palo Alto, CA" no longer falls to `unknown`.)
     assert _by_title(postings, "Senior iOS Engineer").region == Region.US
-    assert _by_title(postings, "Android Engineer").region == Region.unknown
+    assert _by_title(postings, "Android Engineer").region == Region.US
 
 
 def test_unclassifiable_postings_kept_not_dropped(postings: list[Posting]) -> None:

@@ -173,10 +173,12 @@ def test_derived_fields_use_the_shared_classifiers(postings: list[Posting]) -> N
     grad = _by_req(postings, "JR-0000068287")
     assert grad.program_type == ProgramType.graduate            # "...Graduate Programme..."
     assert grad.division == "Technology"                        # "Technology Developer..."
-    # A Mumbai role resolves to APAC; a Prague/Pune location has no region keyword and
-    # is honestly left unknown (a classifier-config gap, not an adapter bug).
+    # A Mumbai role resolves to APAC; the Prague grad role resolves to EMEA.
+    # (Session 9 closed the region keyword gap that Session 8 documented here: the
+    # Indian (Pune/Noida/Chennai/...) and Czech (Prague) offices now classify instead
+    # of falling to `unknown`.)
     assert map_region("Mumbai, Nirlon Knowledge Park") == Region.APAC
-    assert grad.region == Region.unknown                        # Prague: config gap
+    assert grad.region == Region.EMEA                           # "Gemini Building B, Prague"
 
 
 def test_unclassifiable_postings_kept_not_dropped(postings: list[Posting]) -> None:

@@ -6,12 +6,15 @@ socket block in conftest.py). The stub below overrides ONLY ``fetch()`` so the
 REAL ``GreenhouseAdapter.parse`` + the real §3.8 classifiers run; that is what
 makes the §5 derived-key stability guard meaningful.
 
-Counts note (see docs/PROGRESS.md, Session 4): the §3.9 dedup key
+Counts note (see docs/PROGRESS.md, Sessions 4 and 9): the §3.9 dedup key
 (firm + normalized_title + program_type + region) collapses the 249 parsed
-postings to 233 unique keys — 16 are same-title/same-region duplicates (some
+postings to 232 unique keys — 17 are same-title/same-region duplicates (some
 genuine, some distinct offices flattened by coarse region). The key is locked, so
-233 new on run 1 is the correct, spec-faithful outcome; the 16 collapsed rows are
-logged for observability.
+232 new on run 1 is the correct, spec-faithful outcome; the 17 collapsed rows are
+logged for observability. (Session 4 measured 233/16; Session 9 closed a region
+keyword-config gap — Taiwan/Florida/Miami no longer fall to `unknown` — which
+re-shared one more same-region pair, so the measured collapse is now 232/17. The
+dedup key itself is unchanged; only the classifier coverage improved.)
 """
 
 from __future__ import annotations
@@ -34,9 +37,11 @@ from ingestion.storage import FirmRow, IngestionRunRow, PostingRow
 FIXTURE = Path(__file__).parent / "fixtures" / "greenhouse_point72.json"
 
 # Known properties of the fixture under the locked §3.9 dedup key.
+# (Session 9: 233/16 -> 232/17 after the region keyword-config gap was closed; the
+# dedup KEY is unchanged — only the classifier coverage improved. See module docstring.)
 TOTAL_FOUND = 249
-UNIQUE_KEYS = 233
-COLLAPSED = 16
+UNIQUE_KEYS = 232
+COLLAPSED = 17
 
 # Distinct logical run timestamps so lifecycle transitions are deterministic.
 T1 = datetime(2026, 6, 15, 9, 0, 0)
