@@ -38,6 +38,7 @@ from sqlalchemy.orm import Session
 
 from ingestion.adapters.base import Adapter
 from ingestion.adapters.greenhouse import GreenhouseAdapter
+from ingestion.adapters.lever import LeverAdapter
 from ingestion.models import Posting, Status
 from ingestion.registry import (
     DEFAULT_REGISTRY_PATH,
@@ -55,6 +56,7 @@ DEFAULT_CLOSED_AFTER_N_MISSES = 2
 # not code (§3.1); adding a new ATS family is one line here.
 ADAPTER_REGISTRY: dict[AtsType, type[Adapter]] = {
     AtsType.greenhouse: GreenhouseAdapter,
+    AtsType.lever: LeverAdapter,
 }
 
 _COUNT_KEYS = ("found", "new", "closed", "reappeared", "collapsed")

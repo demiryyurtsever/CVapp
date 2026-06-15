@@ -152,3 +152,72 @@ built (standing rule 7).
 **Next session:** wrap `run_ingestion()` in the daily scheduler (§3.7 cadence; the
 APScheduler-vs-Celery choice is `[OPEN]`, §8.2), or begin the Lever adapter (§3.4) to
 exercise multi-source dedup. Neither started here.
+
+## Session 5 — Lever adapter + first cross-source dedup test (§3.4 / §3.9)
+
+Built the Lever adapter and nothing else (standing rule 7). Adapters stayed
+stateless and DB-free (§3.2); the existing schema, classifiers, registry loader,
+and pipeline orchestrator logic were **not** changed beyond one registry data
+entry and the one-line adapter wiring.
+
+**Fixture captured first (rule 5).** No Lever fixture existed, so before writing
+any parsing logic I captured one real board:
+`ingestion/tests/fixtures/lever_wealthfront.json` — a single polite GET to
+`api.lever.co/v0/postings/wealthfront?mode=json` (honest UA), raw and unmodified,
+**15** postings. (Probed candidate tokens politely; Plaid's board was empty `[]`,
+Wealthfront's was populated.) Wealthfront is a fintech wealth-management firm used
+as the reference live Lever source — like Point72 on Greenhouse, it is not an IB
+firm, so its `firm_tier` is a documented placeholder.
+
+**Files added/touched:**
+1. **`ingestion/adapters/lever.py`** — `LeverAdapter(Adapter)`. `parse()` maps the
+   Lever payload to §7 and calls the **shared** §3.8 classifiers
+   (`classify_program_type` / `extract_division` / `map_region`) — no parallel
+   classifier. Lever specifics handled: the payload is a **flat JSON array** (not a
+   `{"jobs": […]}` wrapper); `text`→`role_title`, `categories.location`→`location`,
+   `categories.{department,team}`→division input, `hostedUrl`→`source_url`,
+   `id`→`source_id`; `createdAt` is **epoch milliseconds**→`open_date`; and the
+   description, which Lever **splits** across `description`/`lists`/`additional`, is
+   rejoined into one HTML `raw_description` so the Layer 2 parser sees the whole
+   posting. `deadline` is `None` (no Lever field) and `rolling` `False` (as
+   Greenhouse). `fetch()` lazy-imports httpx, one request, honest UA — tests never
+   call it.
+2. **`ingestion/config/registry.yaml`** — added one **data** entry: Wealthfront /
+   `lever` / token `wealthfront` (rule 6 — registry config, not hardcoded).
+3. **`ingestion/pipeline.py`** — wired Lever into `ADAPTER_REGISTRY` (one line,
+   `AtsType.lever: LeverAdapter`) + its import. Orchestrator logic otherwise
+   unchanged.
+4. **`ingestion/tests/test_lever_adapter.py`** — fixture-only adapter tests: flat-
+   array shape, one-posting-per-job (nothing dropped), every posting validates
+   against §7, boundary-field mapping, `createdAt`→date, no deadline,
+   `raw_description` rejoins the split fragments, derived fields come from the §3.8
+   helpers, and — explicitly — all 15 titles are `unclassified` and **kept, not
+   dropped**.
+5. **`ingestion/tests/test_cross_source_dedup.py`** — the **first real test of the
+   multi-source premise (§3.9)**, driving the pipeline over the Greenhouse +
+   Lever fixtures **together**. Asserts both halves of §3.9: (a) different firms
+   never merge — the firm-scoped key gives **zero** Point72↔Wealthfront key overlap,
+   so combined `new` = 233 + 15 = **248** from `found` **264**, with per-source
+   counts kept separate and a §5 stability rerun flipping nothing; and (b) the
+   **same role on two surfaces collapses** — re-presenting three real Wealthfront
+   postings via a second source collapses them to one row each (first-seen/Lever URL
+   wins, collapse logged against the duplicate's source).
+
+**Verify:**
+```powershell
+.\.venv\Scripts\python -m pytest -q          # 60 passed (was 45; +15 new)
+.\.venv\Scripts\python -m pytest -q ingestion/tests/test_lever_adapter.py ingestion/tests/test_cross_source_dedup.py
+```
+Key tests: `test_pipeline_runs_greenhouse_and_lever_together` (found 264 / new 248 /
+collapsed 16, per-source split), `test_different_firms_never_merge_firm_scoped_key`,
+`test_combined_run_is_stable_on_rerun`, `test_same_role_on_two_sources_collapses_to_one`,
+`test_unclassifiable_postings_kept_not_dropped`.
+
+**State now:** ingestion layer has two live JSON adapters (Greenhouse + Lever) on
+one shared interface, dispatched from the data registry, feeding the dedup/storage
+pipeline; multi-source dedup is now tested against two real boards. 60 tests green.
+Scheduler / Workday / other adapters deliberately NOT built (rule 7).
+
+**Next session:** the daily scheduler around `run_ingestion()` (§3.7; APScheduler vs
+Celery is `[OPEN]`, §8.2), or the Workday adapter family (§3.5, covers the BBs;
+tenant-variation strategy is `[OPEN]`, §8.2). Capture a Workday fixture first.

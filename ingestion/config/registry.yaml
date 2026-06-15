@@ -2,6 +2,8 @@
 # The scheduler dispatches each entry to the adapter matching its ats_type.
 # For ats_type: greenhouse, `endpoint_or_url` is the company token used in
 # boards-api.greenhouse.io/v1/boards/{company}/jobs.
+# For ats_type: lever, `endpoint_or_url` is the company token used in
+# api.lever.co/v0/postings/{company}?mode=json.
 sources:
   - firm_name: Point72
     # Placeholder tier: Point72 is a multi-manager fund, not an IB BB/EB/MM/boutique;
@@ -12,3 +14,13 @@ sources:
     region_scope: global
     enabled: true
     polling_notes: "Daily. Public Greenhouse board, no auth. Use ?content=true for descriptions."
+  - firm_name: Wealthfront
+    # Placeholder tier: Wealthfront is a fintech wealth-management firm, not an IB
+    # BB/EB/MM/boutique; it is the reference live Lever source (the company token
+    # `wealthfront` resolves at api.lever.co). See docs/PROGRESS.md.
+    firm_tier: boutique
+    ats_type: lever
+    endpoint_or_url: wealthfront
+    region_scope: US
+    enabled: true
+    polling_notes: "Daily. Public Lever board, no auth. api.lever.co/v0/postings/{company}?mode=json."
