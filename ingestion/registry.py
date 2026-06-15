@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from enum import Enum
 from pathlib import Path
+from typing import Any
 
 import yaml
 from pydantic import BaseModel, ConfigDict
@@ -37,12 +38,21 @@ class SourceEntry(BaseModel):
     firm_name: str
     firm_tier: FirmTier
     ats_type: AtsType
-    # For greenhouse, this is the company token used in
-    # boards-api.greenhouse.io/v1/boards/{company}/jobs.
+    # The company/tenant token. For greenhouse it is the token in
+    # boards-api.greenhouse.io/v1/boards/{company}/jobs; for lever the token in
+    # api.lever.co/v0/postings/{company}; for workday the Workday tenant
+    # (e.g. "barclays" in barclays.wd3.myworkdayjobs.com).
     endpoint_or_url: str
     region_scope: str
     enabled: bool = True
     polling_notes: str | None = None
+    # Optional ATS-specific configuration kept in registry DATA, not code (§2.3).
+    # greenhouse/lever need none (a token is enough). Workday's endpoint is more
+    # parameterized — its URL is {tenant}.wd{n}.myworkdayjobs.com/wday/cxs/{tenant}/
+    # {site}/jobs — so the per-tenant quirks (dc number "wd{n}", site name, the
+    # early-careers search/facet filter) live here. This config-not-subclass choice
+    # for Workday tenant variation is the [OPEN] §8.2 decision; see adapters/workday.py.
+    config: dict[str, Any] | None = None
 
 
 def load_registry(path: Path | str = DEFAULT_REGISTRY_PATH) -> list[SourceEntry]:

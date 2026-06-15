@@ -368,3 +368,122 @@ ATS classification; the next adapter is **Workday**, not another JSON board.
 with a confirmed tenant from the table, e.g. `barclays`.wd3 / `External_Career_Site_Barclays`
 or `ms`.wd5 / `External`), then build `WorkdayAdapter` on the shared interface; resolve
 the `[OPEN]` tenant-variation strategy and the dedup-key region-grain revisit there.
+
+## Session 8 — Workday adapter family + first real IB firm + region-collapse measurement (§3.5 / §3.9)
+
+Built the Workday adapter on the existing shared interface and **measured** (did not
+fix) the coarse-region dedup collapse on real bulge-bracket data. The dedup key stays
+**locked** (rule 2) — the key revisit remains a separate later session (per Session 7).
+Adapters stayed stateless and DB-free (§3.2); the schema, classifiers, pipeline
+orchestrator logic, and storage were **not** changed beyond one registry field, one
+registry data entry, and the one-line adapter wiring.
+
+**Fixture captured first (rule 5).** No Workday fixture existed, so before any parsing
+logic I captured one from a confirmed tenant —
+`ingestion/tests/fixtures/workday_barclays.json` (Barclays / `barclays`.wd3 / site
+`External_Career_Site_Barclays`). Workday postings come from a **paginated JSON POST** to
+`{tenant}.wd{n}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs` (§3.5); polite, minimal
+requests with an honest User-Agent and a 2s inter-request delay (§3.12). The listing is
+**shallow** (title / externalPath / locationsText / a *relative* `postedOn` / bulletFields
+`JR-…`), so I also captured **one** verbatim per-posting **detail** follow-up
+(`GET …/{externalPath}` → `jobPostingInfo` with `jobDescription`, an absolute `startDate`,
+and `externalUrl`). **Fixture holds 23 postings** (early-careers "graduate" search; 2
+paginated pages of 20 + 3) plus the one detail example.
+
+*Fixture note (honest, per the Session-4 precedent of letting data falsify assumptions):*
+this Barclays external site is lateral/experienced-role heavy and Workday free-text search
+is loose. "graduate" was the most defensibly early-careers term (it surfaces the real
+"Technology Developer Graduate Programme 2026" and one detail example); probes of
+"internship"/"summer analyst"/"spring"/"industrial placement" each returned either ~1
+unrelated senior role or framework-keyword noise (e.g. "spring" → Java *Spring* roles), so
+they were not used. The genuine multi-office UK early-careers programmes are not surfaced
+by free-text on this site (likely a job-family facet or a separate early-careers site).
+
+**Files added/touched:**
+1. **`ingestion/adapters/workday.py`** — `WorkdayAdapter(Adapter)`. `parse()` maps the
+   Workday payload to §7 and calls the **shared** §3.8 classifiers
+   (`classify_program_type` / `extract_division` / `map_region`) — no parallel classifier.
+   Workday specifics: the payload is a `{"total": N, "jobPostings": [...]}` object (POST
+   result), not a flat array (Lever) or `{"jobs": …}` (Greenhouse); `title`→`role_title`,
+   `locationsText`→`location`, `bulletFields[0]` (the `JR-…` req id)→`source_id`,
+   `externalPath`→a built public `source_url`. The shallow listing has no description or
+   absolute date, so `raw_description`/`open_date` come from the per-posting **detail**
+   (`jobDescription` / ISO `startDate` / `externalUrl`), which `fetch()` attaches under
+   `"_detail"`; `parse()` reads it when present and falls back to listing-only fields
+   otherwise (honest `None`, never guessed from the relative "Posted N Days Ago").
+   `deadline` is `None` (no Workday field) and `rolling` `False` (as the others).
+   `fetch()` lazy-imports httpx, does the **paginated POST** (offset/limit loop to `total`)
+   + per-posting detail follow-up, honest UA, polite per-request delay — tests never call it.
+2. **`[OPEN]` §8.2 tenant variation — this session chose CONFIG, not subclasses (a
+   proposal, not a lock).** Every per-tenant quirk (tenant token, dc number `wd{n}`, site
+   name, early-careers `search_text`/`applied_facets`) lives in the registry entry's new
+   `config` block, so a new Workday firm is a **data** entry, not a subclass. The adapter
+   reads tenant from `endpoint_or_url` (consistent with greenhouse/lever) and dc/site/filter
+   from `config`. A module comment marks config-vs-subclass as still `[OPEN]` and names the
+   escape hatch (a thin per-tenant subclass) if a tenant ever needs behaviour config cannot
+   express.
+3. **`ingestion/registry.py`** — added one optional typed field to `SourceEntry`:
+   `config: dict[str, Any] | None = None` (ATS-specific config kept in registry **data**,
+   §2.3). greenhouse/lever leave it `None`.
+4. **`ingestion/config/registry.yaml`** — added the **first real IB firm**: Barclays
+   (a bulge bracket) / `workday` / tenant `barclays`, `config: {dc: wd3, site:
+   External_Career_Site_Barclays, search_text: graduate}`. The two placeholder JSON sources
+   (Point72/GH, Wealthfront/Lever) are kept as-is — they are test-fixture reference boards,
+   not targets.
+5. **`ingestion/pipeline.py`** — wired Workday into `ADAPTER_REGISTRY` (one line,
+   `AtsType.workday: WorkdayAdapter`) + its import. Orchestrator logic otherwise unchanged.
+6. **`ingestion/tests/test_workday_adapter.py`** — fixture-only adapter tests mirroring the
+   Lever set: the `{"jobPostings": …}` shape, pagination aggregation (23 across 2 pages),
+   empty/missing-key robustness, one-posting-per-job (nothing dropped), every posting
+   validates against §7, listing-only boundary mapping (built `source_url`), detail-enriched
+   mapping (`raw_description`/`open_date`/`externalUrl`), no deadline + `rolling False`,
+   derived fields equal the §3.8 classifier output for each row, and unclassifiable titles
+   kept not dropped (22 of 23).
+7. **`ingestion/tests/test_workday_collapse.py`** — the region-collapse **report**
+   (Option A, measure don't fix): runs the pipeline over the Workday fixture and asserts the
+   collapse count, that it is logged on the run row (`ingestion_runs.collapsed`) and in the
+   per-source breakdown, and characterises the collapsing group.
+
+**⚠️ Region-collapse measurement (the deliverable for the later `[OPEN]` revisit).**
+Over the real Barclays fixture under the locked §3.9 key (firm + normalized_title +
+program_type + region):
+
+> **found 23 → unique 21 → COLLAPSED = 2** (logged on `ingestion_runs.collapsed`).
+
+**The 2 collapses are NOT coarse-region flattening of distinct offices.** They are three
+identical "Third Party Risk Manager" postings in the **same** office ("Noida, Candor
+TechSpace") collapsing 3 → 1 — a genuine same-title/same-location duplicate, exactly what
+the key *should* merge. **Zero** genuinely-distinct office/city openings were flattened by
+region on this slice. So Session 7's prediction that region-flattening would be *acute* on
+the Workday BBs was **not** borne out by this particular early-careers slice — because the
+site is lateral-heavy with distinct titles, and the region classifier currently maps
+Pune/Noida/Chennai/Prague to `unknown` (a keyword-config gap, not an adapter bug), so even
+repeated titles don't all share a region. **Evidence for the revisit:** to actually
+stress-test the region grain, capture a true multi-office UK early-careers programme (e.g.
+a Summer Analyst across London/Glasgow/Belfast), which this site's free-text search did not
+surface; and the region keyword set needs Indian/Czech cities added before any region-grain
+conclusion. Key unchanged — this is the evidence, not a fix.
+
+**Verify:**
+```powershell
+.\.venv\Scripts\python -m pytest -q          # 76 passed (was 61; +15 Workday)
+.\.venv\Scripts\python -m pytest -q ingestion/tests/test_workday_adapter.py ingestion/tests/test_workday_collapse.py
+```
+Key tests: `test_pagination_aggregates_all_pages`, `test_detail_followup_populates_description_url_and_open_date`,
+`test_derived_fields_use_the_shared_classifiers`, `test_unclassifiable_postings_kept_not_dropped`,
+`test_workday_fixture_collapse_count` (found 23 / new 21 / collapsed 2),
+`test_collapse_is_logged_on_the_run_row`,
+`test_collapsed_group_is_a_same_office_duplicate_not_region_flattening`.
+
+**State now:** ingestion layer has **three** live JSON/HTTP adapters — Greenhouse + Lever +
+Workday — on one shared interface, dispatched from the data registry into the dedup/storage
+pipeline. The registry now holds its **first real IB target** (Barclays, a BB). 76 tests
+green. Scheduler and the other adapters (tal.net/Oracle/Phenom) deliberately NOT built
+(rule 7); the dedup key and all locked decisions unchanged.
+
+**Next session:** either the daily scheduler around `run_ingestion()` (§3.7; `[OPEN]`
+APScheduler vs Celery, §8.2), or the **dedup-key region-grain revisit** (`[OPEN]` §8.2) —
+which now needs a true multi-office UK early-careers Workday capture (a facet-filtered or
+separate early-careers site) plus region-keyword coverage for the missing cities before it
+can decide whether the region grain needs city/office. After that, the tal.net/Oleeo
+cluster (§3.6, ~6 firms) and the cheap SmartRecruiters + Teamtailor JSON follow-ups.

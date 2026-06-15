@@ -4,6 +4,9 @@
 # boards-api.greenhouse.io/v1/boards/{company}/jobs.
 # For ats_type: lever, `endpoint_or_url` is the company token used in
 # api.lever.co/v0/postings/{company}?mode=json.
+# For ats_type: workday, `endpoint_or_url` is the Workday tenant token and the
+# extra per-tenant params (dc number, site, early-careers search/facet filter)
+# live in `config` (§3.5; the config-not-subclass choice is the [OPEN] §8.2 call).
 sources:
   - firm_name: Point72
     # Placeholder tier: Point72 is a multi-manager fund, not an IB BB/EB/MM/boutique;
@@ -24,3 +27,22 @@ sources:
     region_scope: US
     enabled: true
     polling_notes: "Daily. Public Lever board, no auth. api.lever.co/v0/postings/{company}?mode=json."
+  - firm_name: Barclays
+    # FIRST real IB firm in the registry (a bulge bracket). Confirmed Workday tenant
+    # from the Session 7 discovery table (docs/PROGRESS.md): barclays.wd3, external
+    # career site External_Career_Site_Barclays.
+    firm_tier: BB
+    ats_type: workday
+    endpoint_or_url: barclays
+    region_scope: global
+    enabled: true
+    # Per-tenant Workday quirks live here, not in code (the [OPEN] §8.2 config choice).
+    config:
+      dc: wd3
+      site: External_Career_Site_Barclays
+      # Early-careers search filter. Workday free-text search is loose; "graduate"
+      # is the most defensibly early-careers term on this site (it surfaces the
+      # Graduate Programme postings). Tune to a job-family facet via `applied_facets`
+      # if/when the facet ids are confirmed.
+      search_text: graduate
+    polling_notes: "Daily. Workday paginated POST + per-posting detail follow-up. tenant=barclays dc=wd3 site=External_Career_Site_Barclays."

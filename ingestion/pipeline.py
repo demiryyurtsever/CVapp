@@ -39,6 +39,7 @@ from sqlalchemy.orm import Session
 from ingestion.adapters.base import Adapter
 from ingestion.adapters.greenhouse import GreenhouseAdapter
 from ingestion.adapters.lever import LeverAdapter
+from ingestion.adapters.workday import WorkdayAdapter
 from ingestion.models import Posting, Status
 from ingestion.registry import (
     DEFAULT_REGISTRY_PATH,
@@ -57,6 +58,7 @@ DEFAULT_CLOSED_AFTER_N_MISSES = 2
 ADAPTER_REGISTRY: dict[AtsType, type[Adapter]] = {
     AtsType.greenhouse: GreenhouseAdapter,
     AtsType.lever: LeverAdapter,
+    AtsType.workday: WorkdayAdapter,
 }
 
 _COUNT_KEYS = ("found", "new", "closed", "reappeared", "collapsed")

@@ -1,0 +1,326 @@
+{
+  "_capture": {
+    "tenant": "barclays",
+    "dc": "wd3",
+    "site": "External_Career_Site_Barclays",
+    "list_url": "https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays/jobs",
+    "detail_url_pattern": "https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays{externalPath}",
+    "search_text": "graduate",
+    "captured": "2026-06-15",
+    "method": "Polite minimal capture (dossier 3.12): honest User-Agent, paginated POST (limit=20), 2s delay between requests.",
+    "note": "jobPostings aggregates the two paginated listing pages VERBATIM (Workday returns up to limit per POST; total=23 -> page1=20 + page2=3). The listing is shallow (title/externalPath/locationsText/postedOn/bulletFields); it carries no description or absolute date. example_detail is ONE verbatim per-posting follow-up response (GET .../{externalPath}); raw_description comes from its jobPostingInfo.jobDescription and open_date from jobPostingInfo.startDate."
+  },
+  "total": 23,
+  "jobPostings": [
+    {
+      "title": "Engineering Practices DevOps Lead",
+      "externalPath": "/job/Pune-Gera-Commerzone-SEZ/Engineering-Practices-DevOps-Lead_JR-0000101091-3",
+      "timeType": "Full time",
+      "locationsText": "Pune, Gera Commerzone SEZ",
+      "postedOn": "Posted Today",
+      "bulletFields": [
+        "JR-0000101091"
+      ]
+    },
+    {
+      "title": "Third Party Risk Manager",
+      "externalPath": "/job/Noida-Candor-TechSpace/Third-Party-Risk-Manager_JR-0000092629-1",
+      "timeType": "Full time",
+      "locationsText": "Noida, Candor TechSpace",
+      "postedOn": "Posted 4 Days Ago",
+      "bulletFields": [
+        "JR-0000092629"
+      ]
+    },
+    {
+      "title": "Technology Developer Graduate Programme 2026 Prague",
+      "externalPath": "/job/Gemini-Building-B-Prague/Technology-Developer-Graduate-Programme-2026-Prague_JR-0000068287",
+      "timeType": "Full time",
+      "locationsText": "Gemini Building B, Prague",
+      "postedOn": "Posted 5 Days Ago",
+      "bulletFields": [
+        "JR-0000068287"
+      ]
+    },
+    {
+      "title": "Macro TSA Analyst",
+      "externalPath": "/job/Mumbai-Nirlon-Knowledge-Park-BX-9th--11-12-floor/Macro-TSA-Analyst_JR-0000115930-1",
+      "timeType": "Full time",
+      "locationsText": "Mumbai, Nirlon Knowledge Park (BX) 9th & 11-12 floor",
+      "postedOn": "Posted 5 Days Ago",
+      "bulletFields": [
+        "JR-0000115930"
+      ]
+    },
+    {
+      "title": "Analyst - PBWM CFO BP",
+      "externalPath": "/job/Chennai-DLF-IT-Park/Analyst---PBWM-CFO-BP_JR-0000113705",
+      "timeType": "Full time",
+      "locationsText": "Chennai, DLF IT Park",
+      "postedOn": "Posted 6 Days Ago",
+      "bulletFields": [
+        "JR-0000113705"
+      ]
+    },
+    {
+      "title": "Broking Operations Lead",
+      "externalPath": "/job/Mumbai-Nirlon-Knowledge-Park-IB--9th-floor/Broking-Operations-Lead_JR-0000099404",
+      "timeType": "Full time",
+      "locationsText": "Mumbai, Nirlon Knowledge Park (IB) , 9th floor",
+      "postedOn": "Posted 13 Days Ago",
+      "bulletFields": [
+        "JR-0000099404"
+      ]
+    },
+    {
+      "title": "BA4 - Research Analyst",
+      "externalPath": "/job/Mumbai-Nirlon-Knowledge-Park-BX-9th--11-12-floor/BA4---Research-Analyst_JR-0000114825",
+      "timeType": "Full time",
+      "locationsText": "Mumbai, Nirlon Knowledge Park (BX) 9th & 11-12 floor",
+      "postedOn": "Posted 13 Days Ago",
+      "bulletFields": [
+        "JR-0000114825"
+      ]
+    },
+    {
+      "title": "Trust Officer",
+      "externalPath": "/job/Mumbai-Nirlon-Knowledge-Park-BX-9th--11-12-floor/Trust-Officer_JR-0000112505-1",
+      "timeType": "Full time",
+      "locationsText": "Mumbai, Nirlon Knowledge Park (BX) 9th & 11-12 floor",
+      "postedOn": "Posted 14 Days Ago",
+      "bulletFields": [
+        "JR-0000112505"
+      ]
+    },
+    {
+      "title": "CISO Secure Build Lead",
+      "externalPath": "/job/Pune-Gera-Commerzone-SEZ/CISO-Secure-Build-Lead_JR-0000095399",
+      "timeType": "Full time",
+      "locationsText": "Pune, Gera Commerzone SEZ",
+      "postedOn": "Posted 20 Days Ago",
+      "bulletFields": [
+        "JR-0000095399"
+      ]
+    },
+    {
+      "title": "SP Financing - Full Stack Developer",
+      "externalPath": "/job/Pune-Gera-Commerzone-SEZ/SP-Financing---Full-Stack-Developer_JR-0000101597-2",
+      "timeType": "Full time",
+      "locationsText": "Pune, Gera Commerzone SEZ",
+      "postedOn": "Posted 20 Days Ago",
+      "bulletFields": [
+        "JR-0000101597"
+      ]
+    },
+    {
+      "title": "Lead Data Architect",
+      "externalPath": "/job/Pune-Gera-Commerzone-SEZ/Lead-Data-Architect_JR-0000027152",
+      "timeType": "Full time",
+      "locationsText": "Pune, Gera Commerzone SEZ",
+      "postedOn": "Posted 20 Days Ago",
+      "bulletFields": [
+        "JR-0000027152"
+      ]
+    },
+    {
+      "title": "Third Party Risk Manager",
+      "externalPath": "/job/Noida-Candor-TechSpace/Third-Party-Risk-Manager_JR-0000092814-1",
+      "timeType": "Full time",
+      "locationsText": "Noida, Candor TechSpace",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "JR-0000092814"
+      ]
+    },
+    {
+      "title": "Risk Manager Global Network Services",
+      "externalPath": "/job/Pune-Gera-Commerzone-SEZ/Risk-Manager-Global-Network-Services_JR-0000110091",
+      "timeType": "Full time",
+      "locationsText": "Pune, Gera Commerzone SEZ",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "JR-0000110091"
+      ]
+    },
+    {
+      "title": "Third Party Risk Manager",
+      "externalPath": "/job/Noida-Candor-TechSpace/Third-Party-Risk-Manager_JR-0000092802-1",
+      "timeType": "Full time",
+      "locationsText": "Noida, Candor TechSpace",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "JR-0000092802"
+      ]
+    },
+    {
+      "title": "VP - Sr Engineer",
+      "externalPath": "/job/Pune-Gera-Commerzone-SEZ/VP---Sr-Engineer_JR-0000099406-3",
+      "timeType": "Full time",
+      "locationsText": "Pune, Gera Commerzone SEZ",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "JR-0000099406"
+      ]
+    },
+    {
+      "title": "Analyst - Operations Design",
+      "externalPath": "/job/Mumbai-Nirlon-Knowledge-Park-BX-9th--11-12-floor/Analyst---Operations-Design_JR-0000093172-1",
+      "timeType": "Full time",
+      "locationsText": "Mumbai, Nirlon Knowledge Park (BX) 9th & 11-12 floor",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "JR-0000093172"
+      ]
+    },
+    {
+      "title": "AVP Remittance",
+      "externalPath": "/job/Mumbai-Nirlon-Knowledge-Park-IB--9th-floor/AVP-Remittance_JR-0000093201-7",
+      "timeType": "Full time",
+      "locationsText": "Mumbai, Nirlon Knowledge Park (IB) , 9th floor",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "JR-0000093201"
+      ]
+    },
+    {
+      "title": "IFC - Lead Full Stack Developer",
+      "externalPath": "/job/Pune-Gera-Commerzone-SEZ/IFC---Lead-Full-Stack-Developer_JR-0000083111-1",
+      "timeType": "Full time",
+      "locationsText": "Pune, Gera Commerzone SEZ",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "JR-0000083111"
+      ]
+    },
+    {
+      "title": "Liquid Financing Analyst – RMG Capital & Funding",
+      "externalPath": "/job/Mumbai-Nirlon-Knowledge-Park-BX-9th--11-12-floor/Liquid-Financing-Analyst---RMG-Capital---Funding_JR-0000095391",
+      "timeType": "Full time",
+      "locationsText": "Mumbai, Nirlon Knowledge Park (BX) 9th & 11-12 floor",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "JR-0000095391"
+      ]
+    },
+    {
+      "title": "Analyst – RMG",
+      "externalPath": "/job/Mumbai-Nirlon-Knowledge-Park-BX-9th--11-12-floor/Analyst---RMG_JR-0000087654-1",
+      "timeType": "Full time",
+      "locationsText": "Mumbai, Nirlon Knowledge Park (BX) 9th & 11-12 floor",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "JR-0000087654"
+      ]
+    },
+    {
+      "title": "Analyst – RMG Collateral Optimization",
+      "externalPath": "/job/Mumbai-Nirlon-Knowledge-Park-IB--9th-floor/Assistant-VP---Global-Markets_JR-0000073892-1",
+      "timeType": "Full time",
+      "locationsText": "Mumbai, Nirlon Knowledge Park (IB) , 9th floor",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "JR-0000073892"
+      ]
+    },
+    {
+      "title": "Developer",
+      "externalPath": "/job/Chennai-DLF-IT-Park/Developer_JR-0000069628",
+      "timeType": "Full time",
+      "locationsText": "Chennai, DLF IT Park",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "JR-0000069628"
+      ]
+    },
+    {
+      "title": "Spark Java Developer",
+      "externalPath": "/job/Pune-Gera-Commerzone-SEZ/Spark-Java-Developer_JR-0000068620",
+      "timeType": "Full time",
+      "locationsText": "Pune, Gera Commerzone SEZ",
+      "postedOn": "Posted 30+ Days Ago",
+      "bulletFields": [
+        "JR-0000068620"
+      ]
+    }
+  ],
+  "example_detail": {
+    "jobPostingInfo": {
+      "id": "295023ba13e91001904138b6aa790001",
+      "title": "Engineering Practices DevOps Lead",
+      "jobDescription": "<h1><b>Job Description</b></h1><p style=\"text-align:inherit\"></p><p></p><p></p><p><b>Purpose of the role</b></p><p>To design, develop and improve software, utilising various engineering methodologies, that provides business, platform, and technology capabilities for our customers and colleagues. </p><p></p><p><b>Accountabilities</b></p><ul><li>Development and delivery of high-quality software solutions by using industry aligned programming languages, frameworks, and tools. Ensuring that code is scalable, maintainable, and optimized for performance.</li><li>Cross-functional collaboration with product managers, designers, and other engineers to define software requirements, devise solution strategies, and ensure seamless integration and alignment with business objectives.</li><li>Collaboration with peers, participate in code reviews, and promote a culture of code quality and knowledge sharing.</li><li>Stay informed of industry technology trends and innovations and actively contribute to the organization’s technology communities to foster a culture of technical excellence and growth.</li><li>Adherence to secure coding practices to mitigate vulnerabilities, protect sensitive data, and ensure secure software solutions.</li><li>Implementation of effective unit testing practices to ensure proper code design, readability, and reliability.</li></ul><p></p><p><b>Vice President Expectations</b></p><ul><li>To contribute or set strategy, drive requirements and make recommendations for change. Plan resources, budgets, and policies; manage and maintain policies/ processes; deliver continuous improvements and escalate breaches of policies/procedures..</li><li>If managing a team, they define jobs and responsibilities, planning for the department’s future needs and operations, counselling employees on performance and contributing to employee pay decisions/changes. They may also lead a number of specialists to influence the operations of a department, in alignment with strategic as well as tactical priorities, while balancing short and long term goals and ensuring that budgets and schedules meet corporate requirements..</li><li>If the position has leadership responsibilities, People Leaders are expected to demonstrate a clear set of leadership behaviours to create an environment for colleagues to thrive and deliver to a consistently excellent standard. The four LEAD behaviours are: L – Listen and be authentic, E – Energise and inspire, A – Align across the enterprise, D – Develop others..</li><li>OR for an individual contributor, they will be a subject matter expert within own discipline and will guide technical direction.  They will lead collaborative, multi-year assignments and guide team members through structured assignments, identify the need for the inclusion of other areas of specialisation to complete assignments. They will train, guide and coach less experienced specialists and provide information affecting long term profits, organisational risks and strategic decisions..</li><li>Advise key stakeholders, including functional leadership teams and senior management on functional and cross functional areas of impact and alignment.</li><li>Manage and mitigate risks through assessment, in support of the control and governance agenda.</li><li>Demonstrate leadership and accountability for managing risk and strengthening controls in relation to the work your team does.</li><li>Demonstrate comprehensive understanding of the organisation functions to contribute to achieving the goals of the business.</li><li>Collaborate with other areas of work, for business aligned support areas to keep up to speed with business activity and the business strategies.</li><li>Create solutions based on sophisticated analytical thought comparing and selecting complex alternatives. In-depth analysis with interpretative thinking will be required to define problems and develop innovative solutions.</li><li>Adopt and include the outcomes of extensive research in problem solving processes.</li><li>Seek out, build and maintain trusting relationships and partnerships with internal and external stakeholders in order to accomplish key business objectives, using influencing and negotiating skills to achieve outcomes.</li></ul><p></p><p>All colleagues will be expected to demonstrate the Barclays Values of Respect, Integrity, Service, Excellence and Stewardship – our moral compass, helping us do what we believe is right. They will also be expected to demonstrate the Barclays Mindset – to Empower, Challenge and Drive – the operating manual for how we behave.</p><p></p><p></p><p>At Barclays, we don’t just adapt to the future – we create it. The Engineering Practices DevOps Lead (EP) team builds and maintains the core CI/CD framework, shared libraries, and documentation platform used across the organisation. As an EP DevOps / Software Engineer, you will serve as a frontline support engineer and contributor — helping teams adopt EP to oling, resolving issues, and feeding real-world requirements back into the platform.</p><p></p><p><b>To be successful in this role</b> <b>you should possess:</b></p><ul><li><p>Graduate / Postgraduate Degree and hands on experience with software development and Devops with experience with Maven / Nexus artifact management.</p></li><li><p>Familiarity with .NET or Java / Spring Boot build and deployment pipelines.</p></li><li><p>Experience with ELK stack (Elasticsearch, Logstash, Kibana) for logging and observability with knowledge of JIRA workflows and integration with CI/CD processes.</p></li><li><p>Exposure to monorepo tooling (Turborepo, pnpm workspaces, Cargo workspaces).</p></li><li><p>Prior experience in a platform engineering, developer experience (DevEx), or internal tooling team.</p></li></ul><p></p><p><b>Some other highly valued skills may include:</b></p><ul><li><p>CI/CD pipelines — Hands-on experience with GitLab CI or similar pipeline orchestration tools; understanding of multi-stage pipelines (build, test, deploy, promote, release).</p></li><li><p>Containerisation &amp; orchestration — Working knowledge of Docker and Kubernetes (deployments, Helm charts, environment-based routing).</p></li><li><p>At least one of the following languages at a working level: Rust — the EP CLI and core libraries are written in Rust, TypeScript / JavaScript — the documentation platform and frontend tooling use React, Vite, pnpm, and Turborepo,Kotlin / Gradle — shared Gradle plugins and build logic.</p></li><li><p>Infrastructure as Code — Familiarity with Ansible or similar configuration management tools, Version control — Proficiency with Git, including branching strategies, merge workflows, and monorepo conventions with Linux fundamentals — Comfortable working in terminal environments, shell scripting, and debugging build/deploy issues.</p></li></ul><p></p><p>You may be assessed on key critical skills relevant for success in role, such as risk and controls, change and transformation, business acumen, strategic thinking and digital and technology, as well as job-specific technical skills. <br />The location of the role is Pune, IN.</p><p></p><p></p><p style=\"text-align:inherit\"></p><p style=\"text-align:inherit\"></p>",
+      "location": "Pune, Gera Commerzone SEZ",
+      "postedOn": "Posted Today",
+      "startDate": "2026-06-15",
+      "timeType": "Full time",
+      "jobReqId": "JR-0000101091",
+      "jobPostingId": "Engineering-Practices-DevOps-Lead_JR-0000101091-3",
+      "jobPostingSiteId": "External_Career_Site_Barclays",
+      "country": {
+        "descriptor": "India",
+        "id": "c4f78be1a8f14da0ab49ce1162348a5e"
+      },
+      "canApply": true,
+      "posted": true,
+      "includeResumeParsing": true,
+      "jobRequisitionLocation": {
+        "descriptor": "Pune, Gera Commerzone SEZ",
+        "country": {
+          "descriptor": "India",
+          "id": "c4f78be1a8f14da0ab49ce1162348a5e",
+          "alpha2Code": "IN"
+        }
+      },
+      "externalUrl": "https://barclays.wd3.myworkdayjobs.com/External_Career_Site_Barclays/job/Pune-Gera-Commerzone-SEZ/Engineering-Practices-DevOps-Lead_JR-0000101091-3",
+      "questionnaireId": "7312167fa45f1001e09b105ece450000"
+    },
+    "hiringOrganization": {
+      "name": "1203 Barclays Global Serv. Cent",
+      "url": ""
+    },
+    "similarJobs": [
+      {
+        "title": "DevOps Engineering Lead",
+        "externalPath": "/job/Pune-Gera-Commerzone-SEZ/DevOps-Engineering-Lead_JR-0000081405",
+        "timeType": "Full time",
+        "locationsText": "Pune, Gera Commerzone SEZ",
+        "postedOn": "Posted 30+ Days Ago",
+        "startDate": "2025-11-18"
+      },
+      {
+        "title": "DevOps Engineering Lead",
+        "externalPath": "/job/Pune-Gera-Commerzone-SEZ/DevOps-Engineering-Lead_JR-0000069662",
+        "timeType": "Full time",
+        "locationsText": "Pune, Gera Commerzone SEZ",
+        "postedOn": "Posted 30+ Days Ago",
+        "startDate": "2026-04-15"
+      },
+      {
+        "title": "Data Engineer",
+        "externalPath": "/job/Pune-Gera-Commerzone-SEZ/Data-Engineer_JR-0000097055-4",
+        "timeType": "Full time",
+        "locationsText": "Pune, Gera Commerzone SEZ",
+        "postedOn": "Posted 30+ Days Ago",
+        "startDate": "2026-03-17"
+      },
+      {
+        "title": "DevOps Lead Engineer",
+        "externalPath": "/job/Pune-Gera-Commerzone-SEZ/DevOps-Lead-Engineer_JR-0000097673",
+        "timeType": "Full time",
+        "locationsText": "Pune, Gera Commerzone SEZ",
+        "postedOn": "Posted 30+ Days Ago",
+        "startDate": "2026-04-10",
+        "timeLeftToApply": "13 days left to apply",
+        "jobPostingEndDateAsText": "End Date: June 30, 2026"
+      },
+      {
+        "title": "DevOps Engineer",
+        "externalPath": "/job/Pune-Gera-Commerzone-SEZ/DevOps-Engineer_JR-0000105028-1",
+        "timeType": "Full time",
+        "locationsText": "Pune, Gera Commerzone SEZ",
+        "postedOn": "Posted 5 Days Ago",
+        "startDate": "2026-06-10"
+      }
+    ],
+    "userAuthenticated": false
+  }
+}

@@ -100,10 +100,22 @@ adapter is cheap; a wrong guess about the schema or a locked decision is expensi
 
 ## Current status / where to continue
 
-See `docs/PROGRESS.md` for the authoritative, per-session build log. As of the last entry:
+See `docs/PROGRESS.md` for the authoritative, per-session build log. As of the last entry
+(Session 8):
 
-- **Done:** ingestion layer foundations — canonical schema (`ingestion/models.py`), adapter
-  interface (`ingestion/adapters/base.py`), source registry + loader, §3.8 classifiers, the
-  Greenhouse reference adapter, and fixture-only tests. Test suite green.
-- **Next session:** the pipeline orchestrator + deduplication/change detection (§3.9) + DB
-  writes/storage (§3.10). Do not start it ahead of its session prompt (standing rule 7).
+- **Done:** the ingestion layer end-to-end on fixtures — canonical schema
+  (`ingestion/models.py`), the shared adapter interface (`ingestion/adapters/base.py`),
+  source registry + loader (with an optional `config` block for ATS-specific quirks), the
+  §3.8 classifiers, **three live adapters (Greenhouse + Lever + Workday)**, the pipeline
+  orchestrator with §3.9 dedup/change-detection, Postgres storage (driven on SQLite in
+  tests) + the Alembic `0001` migration, and fixture-only tests. **76 tests green.** The
+  registry holds its first real IB target (Barclays, a BB, on Workday); Point72/GH and
+  Wealthfront/Lever remain non-IB reference boards. The Workday `[OPEN]` §8.2 tenant
+  variation was handled by **config, not subclasses** (a proposal, not a lock). The §3.9
+  dedup key remains **locked**; the region-grain revisit (`[OPEN]` §8.2) is deferred and
+  Session 8 left the measurement evidence it needs (Barclays fixture collapses 23 → 21; the
+  2 collapses are same-office duplicates, not region-flattening — see PROGRESS.md).
+- **Next session:** the daily scheduler around `run_ingestion()` (§3.7; `[OPEN]` APScheduler
+  vs Celery, §8.2), OR the dedup-key region-grain revisit (needs a true multi-office UK
+  early-careers Workday capture + region-keyword coverage for missing cities first). Do not
+  start work ahead of its session prompt (standing rule 7).
