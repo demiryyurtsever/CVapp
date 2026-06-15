@@ -1,0 +1,32 @@
+# Keyword sets for the shared classifiers (dossier §3.8). Editable without
+# redeploying. Matching is case-insensitive and word-boundary aware.
+
+# program_type: rules are checked top-to-bottom; first match wins.
+# No match -> unclassified (surfaced to the review queue, never dropped).
+program_type:
+  spring_week: ["spring", "insight"]
+  summer: ["summer analyst", "summer"]
+  off_cycle: ["off-cycle", "off cycle", "industrial placement", "placement"]
+  graduate: ["graduate", "graduates", "full-time analyst", "full time analyst"]
+
+# division: matched against the title first, then the department names.
+# Order matters (e.g. Quant before Research so "Quantitative Researcher" -> Quant).
+# No match -> null (§7 division is populated only "where extractable").
+division:
+  IBD: ["investment banking", "ibd", "m&a", "mergers and acquisitions", "advisory", "coverage", "leveraged finance"]
+  Markets: ["sales and trading", "sales & trading", "markets", "trading", "fixed income", "equities", "securities"]
+  Quant: ["quantitative", "quant"]
+  Research: ["equity research", "fundamental research", "research", "researcher", "sector analyst"]
+  Technology: ["technology", "software", "engineer", "developer", "devops", "machine learning", "platform"]
+  Investing: ["investment analyst", "discretionary investing", "portfolio manager", "macro"]
+  Operations: ["operations"]
+  Finance: ["finance", "tax", "valuation", "product control", "treasury"]
+  Compliance: ["compliance", "legal", "regulatory", "risk"]
+
+# region: normalized from the posting location string. No match -> unknown.
+# UK is listed before EMEA so UK cities win over the European catch-all.
+region:
+  UK: ["united kingdom", "uk", "london", "england", "scotland", "edinburgh", "manchester", "birmingham", "glasgow", "leeds"]
+  US: ["united states", "usa", "us", "new york", "stamford", "chicago", "boston", "san francisco", "los angeles", "houston", "ny", "ct"]
+  APAC: ["singapore", "hong kong", "japan", "tokyo", "india", "bengaluru", "bangalore", "mumbai", "shanghai", "beijing", "sydney", "australia", "seoul", "korea", "asia", "china"]
+  EMEA: ["emea", "europe", "warsaw", "poland", "paris", "france", "frankfurt", "germany", "dublin", "ireland", "madrid", "spain", "amsterdam", "netherlands", "milan", "italy", "zurich", "geneva", "switzerland", "dubai", "uae", "middle east", "africa", "stockholm", "sweden"]
