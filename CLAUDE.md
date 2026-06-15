@@ -67,7 +67,7 @@ adapter is cheap; a wrong guess about the schema or a locked decision is expensi
 
 ## Repository & GitHub sync
 
-- **GitHub remote:** `https://github.com/demiryyurtsever/cvapp.git` — branch `main`.
+- **GitHub remote:** `https://github.com/demiryyurtsever/CVapp.git` — branch `main`.
 - **Sync is MANUAL by the user's choice — there is NO auto-push hook.** Changes reach
   GitHub only when explicitly pushed. Do not set up an auto-commit/auto-push hook unless
   the user asks for one.
