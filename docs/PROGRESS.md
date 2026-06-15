@@ -221,3 +221,45 @@ Scheduler / Workday / other adapters deliberately NOT built (rule 7).
 **Next session:** the daily scheduler around `run_ingestion()` (§3.7; APScheduler vs
 Celery is `[OPEN]`, §8.2), or the Workday adapter family (§3.5, covers the BBs;
 tenant-variation strategy is `[OPEN]`, §8.2). Capture a Workday fixture first.
+
+## Session 6 — Verify Lever is wired into the pipeline (+ dispatch guard)
+
+Review pass confirming the Lever adapter is not just coded/tested but actually
+**used by** the pipeline. **No integration defect found** — everything from
+Session 5 was already in place:
+
+- `LeverAdapter` is imported in `ingestion/pipeline.py` and registered in
+  `ADAPTER_REGISTRY` (`AtsType.lever: LeverAdapter`).
+- `ingestion/config/registry.yaml` has an `ats_type: lever`, `enabled: true`
+  source (Wealthfront), so `build_adapter()` dispatches it to `LeverAdapter`.
+- `pytest -q` was green at 60 passed before this session.
+
+**One coverage gap closed (the only change):** `run_ingestion` is always tested with
+injected adapters, so `build_adapter()`'s `ats_type → class` lookup had no *direct*
+test — the dispatch worked but wasn't asserted. Added
+`test_registry_sources_dispatch_to_their_adapters` to
+`ingestion/tests/test_cross_source_dedup.py`: it asserts the real registry's `lever`
+source builds a `LeverAdapter` (and `greenhouse` a `GreenhouseAdapter`), and that
+every registry entry resolves to a concrete `Adapter`. A future edit deleting the
+registry line now fails this test loudly. No production code, schema, interface, or
+adapter logic changed.
+
+**Verify:**
+```powershell
+.\.venv\Scripts\python -m pytest -q          # 61 passed (was 60; +1 dispatch guard)
+.\.venv\Scripts\python -m pytest -q ingestion/tests/test_cross_source_dedup.py::test_registry_sources_dispatch_to_their_adapters
+```
+
+**State now:** Lever is **implemented and integrated** — two live JSON adapters
+(Greenhouse + Lever) on one shared interface, dispatched from the data registry,
+feeding the dedup/storage pipeline, with the dispatch now explicitly guarded. 61
+tests green.
+
+**Doc note (not changed here, scope):** `CLAUDE.md`'s "Current status / where to
+continue" block still summarizes the pre-Session-4 state (it names the pipeline
+orchestrator as the next task). `docs/PROGRESS.md` is the authoritative log and is
+current; refresh that CLAUDE.md block in a future housekeeping pass.
+
+**Next session (unchanged):** the daily scheduler around `run_ingestion()` (§3.7;
+`[OPEN]` APScheduler vs Celery, §8.2), or the Workday adapter family (§3.5; capture a
+Workday fixture first).

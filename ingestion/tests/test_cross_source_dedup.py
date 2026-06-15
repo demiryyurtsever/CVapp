@@ -31,7 +31,7 @@ from ingestion.adapters.base import Adapter
 from ingestion.adapters.greenhouse import GreenhouseAdapter
 from ingestion.adapters.lever import LeverAdapter
 from ingestion.models import Posting, Status
-from ingestion.pipeline import dedup_key, run_ingestion, source_key
+from ingestion.pipeline import build_adapter, dedup_key, run_ingestion, source_key
 from ingestion.registry import AtsType, SourceEntry, load_registry
 from ingestion.storage import FirmRow, PostingRow
 
@@ -106,6 +106,24 @@ def lev_entry() -> SourceEntry:
 
 def _count(session) -> int:  # noqa: ANN001
     return session.scalar(select(func.count()).select_from(PostingRow))
+
+
+# --------------------------------------------------------------------------- #
+# 0. Dispatch: the registry source actually reaches the LeverAdapter
+# --------------------------------------------------------------------------- #
+
+def test_registry_sources_dispatch_to_their_adapters() -> None:
+    """§3.1 dispatch guarantee: each registry entry builds the adapter matching its
+    ats_type. This is what makes Lever *used by* the pipeline, not merely present in
+    the codebase — a deleted ADAPTER_REGISTRY line would fail here."""
+    by_ats = {s.ats_type: s for s in load_registry()}
+    assert AtsType.lever in by_ats, "registry has no ats_type: lever source"
+    assert isinstance(build_adapter(by_ats[AtsType.lever]), LeverAdapter)
+    assert isinstance(build_adapter(by_ats[AtsType.greenhouse]), GreenhouseAdapter)
+    # Every enabled registry source resolves to a concrete adapter (no unsupported
+    # ats_type slips through).
+    for entry in load_registry():
+        assert isinstance(build_adapter(entry), Adapter)
 
 
 # --------------------------------------------------------------------------- #
