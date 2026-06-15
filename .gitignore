@@ -9,3 +9,5 @@ dist/
 build/
 .vscode/
 .idea/
+# Local SQLite DBs (Alembic offline fallback / scratch verification).
+*.db
