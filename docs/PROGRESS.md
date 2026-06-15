@@ -263,3 +263,108 @@ current; refresh that CLAUDE.md block in a future housekeeping pass.
 **Next session (unchanged):** the daily scheduler around `run_ingestion()` (§3.7;
 `[OPEN]` APScheduler vs Celery, §8.2), or the Workday adapter family (§3.5; capture a
 Workday fixture first).
+
+## Session 7 — Coverage discovery: real IB target list + ATS classification (§3.1 / §3.5 / §3.6 / §8.1)
+
+**No code, schema, registry, or test changes.** Discovery-only session: turn the two
+placeholder non-IB sources into an evidence-backed, prioritized IB target list and
+classify where each firm's *early-careers* postings actually originate, so the next
+adapter decision (Workday vs custom) is driven by evidence. Method: inspected each
+firm's public careers page / authoritative search-result URLs (primary sources only,
+§8.1) and recorded the ATS host its apply links resolve to. Per scope, **only**
+`greenhouse`/`lever` firms were to be probed — there were none to probe (see below).
+`registry.yaml` was deliberately **not** touched (no unverified firms added).
+
+**Candidate list (28 UK/EMEA IB firms, dossier priority order):** BB (11) → EB (7) →
+MM (10). See the classification table below.
+
+**Headline finding — zero IB targets use Greenhouse or Lever.** All 28 split between
+**Workday** (10 firms) and a long tail of **custom/other** ATSes (17) plus one
+**unknown** (1). Greenhouse/Lever dominate funds/fintech/quant (which is exactly why
+the reference boards are Point72 (a fund) and Wealthfront (fintech) — both non-IB), not
+traditional advisory/IB. **The existing GH+Lever adapters therefore reach 0 of 28 real
+IB targets right now.** This is not a research artifact: targeted GH/Lever searches on
+the likeliest candidates (boutiques, small UK firms — Peel Hunt, Numis, Lincoln,
+Centerview) returned no `boards.greenhouse.io` / `jobs.lever.co` boards.
+
+**Classification table** (ats_type · token-or-host · confidence). "Probe result" column
+omitted — no GH/Lever firms, so no probes were run (correct per scope; never probed
+Workday/custom). Confidence reflects ATS-host identification.
+
+| # | Firm | Tier | ats_type | Token / host (early-careers) | Confidence |
+|---|---|---|---|---|---|
+| 1 | Goldman Sachs | BB | custom/other | `higher.gs.com` (in-house; Avature for events) | High |
+| 2 | Morgan Stanley | BB | **workday** | tenant `ms`.wd5, site `External` | High |
+| 3 | J.P. Morgan | BB | custom/other | Oracle HCM Cloud `jpmc.fa.oraclecloud.com` (CX_1001) | High |
+| 4 | Bank of America | BB | custom/other | campus → `bankcampuscareers.tal.net` (TALENTDesk/Oleeo); *lateral* is Workday `ghr`.wd1 | High |
+| 5 | Citi | BB | **workday** | tenant `citi`.wd5 (front-end `jobs.citi.com`, Phenom search); site TBD | High |
+| 6 | Barclays | BB | **workday** | tenant `barclays`.wd3, site `External_Career_Site_Barclays` | High |
+| 7 | UBS | BB | custom/other | `jobs.ubs.com/TGnewUI` (Kenexa/BrassRing; `partnerid`/`siteid`) | High |
+| 8 | Deutsche Bank | BB | custom/other | own domain `careers.db.com` (vendor not exposed) | Medium |
+| 9 | BNP Paribas | BB | custom/other | `bnpparibasgt.taleo.net` (Taleo) + `bnpparibas.tal.net` | High |
+| 10 | HSBC | BB | custom/other | `portal.careers.hsbc.com` (Phenom) | High |
+| 11 | Société Générale | BB | custom/other | **SmartRecruiters**, token `SocieteGenerale4` (public JSON API) | High |
+| 12 | Centerview Partners | EB | custom/other | in-house `centerviewpartners.com/postings.aspx` | High |
+| 13 | Evercore | EB | custom/other | `evercore.tal.net` (TALENTDesk/Oleeo) | High |
+| 14 | Lazard | EB | custom/other | Oracle HCM Cloud `icbpjb.fa.ocs.oraclecloud.com` | High |
+| 15 | Rothschild & Co | EB | **workday** | tenant `rothschildandco`.wd3 (lateral site `Rothschildandco_Lateral`; EC site TBD) | High |
+| 16 | Moelis & Company | EB | **workday** | tenant `moelis`.wd1 (global univ programs); UK/US events on `moelis-careers.tal.net` | High |
+| 17 | PJT Partners | EB | **workday** | tenant `pjtpartners`.wd1, site `Careers` | High |
+| 18 | Perella Weinberg | EB | **workday** | tenant `pwp` on `wd1.myworkdaysite.com/recruiting/pwp` (campus site TBD) | High |
+| 19 | Houlihan Lokey | MM | **workday** | tenant `hl`.wd1, site `Campus` | High |
+| 20 | Jefferies | MM | custom/other | `jefferies.tal.net` (TALENTDesk/Oleeo) | High |
+| 21 | Macquarie | MM | **workday** | tenant `mq`.wd3, site `CareersatMQ` | High |
+| 22 | Nomura | MM | custom/other | `nomuracampus.tal.net` (TALENTDesk/Oleeo) | High |
+| 23 | Mizuho | MM | **workday** | tenant `mizuhogroup`.wd102 / `mizuho`.wd1 (site `mizuhoamericas`) | High |
+| 24 | RBC Capital Markets | MM | custom/other | Phenom-powered career site | High |
+| 25 | William Blair | MM | custom/other | `williamblair.avature.net` (Avature) | High |
+| 26 | Lincoln International | MM | **unknown** | own-domain careers; vendor not confirmed; **not** GH/Lever | Low |
+| 27 | Numis (Deutsche Numis) | MM | custom/other | folding into Deutsche Bank `careers.db.com` (assumed) | Low |
+| 28 | Peel Hunt | MM | custom/other | `careersat.peelhunt.com` (Teamtailor; public JSON API) | High |
+
+**Reachability tally (the decision driver):**
+- **Reachable RIGHT NOW (GH+Lever adapters): 0 of 28.** No probes run — there were no
+  GH/Lever tokens to probe. The only GH/Lever boards we have remain the non-IB
+  reference sources (Point72/GH, Wealthfront/Lever).
+- **Need Workday (§3.5): 10** — MS, Citi, Barclays (3 BBs); Rothschild, Moelis, PJT,
+  Perella (4 EBs); Houlihan Lokey, Macquarie, Mizuho (3 MMs). (+ BofA's *lateral* board,
+  not its campus one.) Single largest bucket; covers the BBs/EBs as §3.5 predicted.
+- **Need custom/rendered (§3.6) or new JSON adapter: 17** — dominated by a
+  **tal.net / TALENTDesk (Oleeo)** cluster of ~6 early-careers IB boards (BofA-campus,
+  BNP, Evercore, Jefferies, Nomura, Moelis-UK/US), then Oracle HCM Cloud (JPM, Lazard),
+  Phenom (HSBC, RBC), plus single instances of Avature (William Blair), BrassRing (UBS),
+  Taleo (BNP), in-house (GS, Centerview, DB/Numis). Two are clean public-JSON sources
+  shaped like GH/Lever and cheap to add later: **SmartRecruiters** (SocGen, token
+  `SocieteGenerale4`) and **Teamtailor** (Peel Hunt).
+- **Unknown: 1** — Lincoln International (confirm vendor with a click-through later).
+
+**Dedup-collapse flag (§3.9, FLAG ONLY — key is locked, rule 2).** No GH/Lever IB firm
+resolves, so nothing in *this* list to flag now. The substantive point: the coarse-region
+collapse first seen on Point72's APAC roles (Session 4) will become **acute on the Workday
+BBs**, which post one early-careers program (e.g. "2027 Summer Analyst") across many
+offices under near-identical titles — Barclays London + Glasgow both map to `region=UK`
+and collapse to one row under `firm+title+program_type+region`, hiding a genuinely
+distinct opening. **Recommendation: time the `[OPEN]` dedup-key revisit (§8.2) to the
+Workday adapter session**, when real multi-office BB data exists to decide whether the
+region grain needs city/office. Not changed here.
+
+**Recommendation — build the Workday adapter family next (§3.5).** It is the single
+highest-leverage adapter: it unlocks 10 of 28 targets (incl. 3 BBs + 4 EBs) that are
+reachable *no other way*, and "just add GH/Lever firms to the registry first" is **not
+available** — there are none. Capture a Workday fixture first (rule 5); the per-tenant
+table above is the seed (tenant + dc + site). The `[OPEN]` tenant-variation strategy
+(§8.2) and the dedup-key revisit should both be decided in that session. After Workday,
+the next cluster is tal.net/Oleeo (§3.6 rendered, ~6 firms); SmartRecruiters + Teamtailor
+are cheap JSON follow-ups (2 firms) that reuse the GH/Lever adapter pattern.
+
+**Verify:** discovery only — no code changed, so the suite is unaffected (61 passed as of
+Session 6). The classification table above is the durable artifact for the Workday session.
+
+**State now:** ingestion layer unchanged (2 JSON adapters, pipeline, storage, migration,
+61 tests green). We now have an evidence-backed, prioritized 28-firm IB target list with
+ATS classification; the next adapter is **Workday**, not another JSON board.
+
+**Next session:** Workday adapter family (§3.5) — capture a Workday fixture first (start
+with a confirmed tenant from the table, e.g. `barclays`.wd3 / `External_Career_Site_Barclays`
+or `ms`.wd5 / `External`), then build `WorkdayAdapter` on the shared interface; resolve
+the `[OPEN]` tenant-variation strategy and the dedup-key region-grain revisit there.
