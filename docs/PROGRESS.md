@@ -609,3 +609,128 @@ not collapse under the current key — useful evidence on whether the grain or t
 normalization is the lever). Optionally extend region coverage to the new gaps
 (Hungary/Canada/Philippines) first. Alternatively, the daily scheduler (§3.7; `[OPEN]`
 APScheduler vs Celery). Do not start ahead of the session prompt (rule 7).
+
+## Session 10 — RESOLVE the `[OPEN]` §8.2 dedup-key region-grain question (analysis + decision)
+
+**Outcome: the open item is CLOSED, the dedup key UNCHANGED.** An analysis/decision
+session — it changed **no** production logic: it did NOT touch the dedup key, the §7
+schema, the adapter interface, the pipeline lifecycle, the registry (Citi stays
+**disabled**), or any locked decision. The only file added is one measurement/analysis
+test (explicitly permitted by the prompt). The close was reached only after a genuine
+attempt to falsify it (the counterexample hunt below). **89 → 93 tests.**
+
+### 1. Measurement — the multi-office programme under the current key
+
+Drove `workday_citi_earlycareers.json` (Citi / `citi.wd5` / site `2`, the captured
+multi-office "Summer Analyst Program") through the **real** Workday `parse()` + the
+**real** locked §3.9 key (`firm + normalized_title + program_type + region`):
+
+> **Full fixture: found 46 → unique 45 → COLLAPSED 1.**
+
+- The **1** collapse is two identical `Apps Dev Tech Lead Analyst` postings in the
+  **same** office (`Jersey City New Jersey United States`) — a genuine same-title/
+  same-office duplicate, exactly what the key SHOULD merge. It is a lateral
+  (`unclassified`) role, not even early-careers.
+- Of the 46, **18 are genuine early-careers** (all classify `summer` — the real
+  multi-office programme; the other 28 are lateral/VP rows the loose free-text search
+  dragged in). Those **18 early-careers postings produce 18 DISTINCT dedup keys → ZERO
+  collapse.** They span 8 cities (Sydney ×6, New York ×3, Tokyo ×3, Budapest ×2,
+  Melbourne, Dubai, Mississauga, Manila).
+- **Why they don't collapse — confirmed Session 9's read:** Citi puts the **city in the
+  title**. The same-region multi-office shape is present — `Corporate Advisory Summer
+  Analyst` is posted in **both Sydney and Melbourne, both → region APAC** — yet the two
+  stay distinct because "Sydney"/"Melbourne" is *in* `normalize_title`. **0**
+  genuinely-distinct openings collapse under the key.
+
+### 2. Lever isolation — which field actually separates distinct openings
+
+**The title, not the region grain.** On the Sydney+Melbourne Corporate Advisory pair:
+`firm`, `program_type` (summer) and `region` (APAC) are **identical** — coarse region
+provides *zero* separation between them. The sole differing key component is the title;
+strip the city from each title and the normalized residuals are byte-for-byte equal
+(`summer analyst program - corporate advisory - summer analyst, australia (apac) - 2026`),
+so the two keys collide. **On real multi-office data the city-in-title is doing the
+distinct-opening separation. Finer region grain would be redundant.**
+
+### 3. Counterexample hunt — the genuine falsification attempt
+
+Target shape that WOULD force a key change: the same programme posted across multiple
+cities in the **same region** with **NO city in the title** (so `normalize_title` does
+not separate them and coarse region flattens them → a distinct opening is hidden).
+
+- **Captured fixtures first.** Citi (above): no counterexample — every early-careers
+  posting has a unique, city-bearing title. Barclays (`workday_barclays.json`, Session 8):
+  its only collapse is the same-office Noida triplicate — no counterexample.
+- **Live probes (polite, §3.12 — honest UA, single client, 2s delays, ≤3 pages/search)**
+  against the three known-reachable Workday BBs — **Barclays** (`barclays.wd3`), **Citi**
+  (`citi.wd5`/site 2), **Morgan Stanley** (`ms.wd5`/`External`) — with early-careers
+  searches (`summer analyst`, `graduate`, `spring`). Grouped every returned posting by
+  `(normalized_title, region)` and flagged any group spanning >1 city. **Result: ZERO
+  early-careers counterexamples on any of the three BBs.** Every genuine early-careers
+  posting was either unique-titled or single-city-per-region (live Citi re-confirmed the
+  fixture: a `summer analyst` probe returned 16 early-careers rows, none colliding).
+- **Honest nuance (recorded, not a key change):** the breaking *shape* DOES occur in the
+  wild — but only on **lateral/experienced** roles, which are **out of scope** (§1.1 /
+  §1.4: this platform tracks IB *early-careers* — spring weeks, summer, off-cycle,
+  graduate). Examples found: MS `Director, Software Engineer` (New York + Chicago, US);
+  Barclays `Software Engineer` (Pune + Bengaluru, APAC); Citi `BANAMEX Asesor Previsional
+  Afore` (Mexican retail, across CDMX/Monterrey/Chihuahua/Juárez). All `unclassified`
+  (→ review queue, not tracked early-careers openings). No in-scope early-careers
+  programme exhibits the shape.
+
+### 4. DECISION — CLOSE `[OPEN]` §8.2 region-grain, key UNCHANGED
+
+Measured against real multi-office early-careers programmes (Citi's Summer Analyst Program
++ Barclays), **firms disambiguate distinct openings by title**; the locked key
+(`firm + normalized_title + program_type + region`) already separates them, and a
+counterexample hunt across all three reachable BBs (captured fixtures + live probes)
+surfaced **no in-scope case** where the key hides a distinct early-careers opening. A
+region-grain change (adding office/city to the key, or city-aware title normalization) is
+therefore **unwarranted** and would only add cost/coupling. **The dedup key stays locked
+and unchanged; the `[OPEN]` §8.2 region-grain revisit is resolved (closed).**
+
+**Bounded caveat / re-open trigger (documented, not acted on):** the key *would* under-
+separate same-title multi-city roles **if and only if** the platform's scope ever expands
+to **lateral/experienced** tracking (an explicit §1.4 non-goal for v1). If that scope
+change ever happens, re-open this item and add office/city to the key. For the v1
+early-careers scope it is closed.
+
+**Proposed dossier/CLAUDE note (proposing, not silently editing the locked §8 doc).**
+Suggest annotating the dossier's §8.2 / the §3.9 dedup note with: *"Region-grain of the
+dedup key — RESOLVED Session 10 (2026-06-16): measured on real multi-office early-careers
+programmes (Citi Summer Analyst Program, Barclays) + a counterexample hunt across the
+reachable Workday BBs; firms disambiguate distinct openings by title, the locked key
+already separates them, region-grain change unwarranted for the v1 early-careers scope.
+Re-open only if scope expands to lateral/experienced roles."* Awaiting your go-ahead
+before editing `docs/Project_Dossier.md` (CLAUDE.md status block refreshed this session).
+
+**Test added (permitted measurement/analysis test):**
+`ingestion/tests/test_citi_region_grain.py` — durably records the finding and guards it:
+`test_full_fixture_collapse_is_one_same_office_duplicate` (46→45, the 1 collapse is the
+Jersey City lateral dup), `test_early_careers_programme_produces_no_collapse` (18 EC → 18
+unique keys), `test_title_not_region_grain_is_the_lever` (Sydney+Melbourne Corporate
+Advisory: same firm/program_type/region, distinct keys, city-stripped titles collide), and
+a guard that the Citi entry stays disabled. Drives the fixture through an injected adapter,
+so it neither enables nor polls the disabled Citi source and makes no network call (rule 5).
+
+**Verify:**
+```powershell
+.\.venv\Scripts\python -m pytest -q          # 93 passed (was 89; +4 Citi region-grain)
+.\.venv\Scripts\python -m pytest -q ingestion/tests/test_citi_region_grain.py
+```
+Key tests: `test_full_fixture_collapse_is_one_same_office_duplicate`,
+`test_early_careers_programme_produces_no_collapse`, `test_title_not_region_grain_is_the_lever`.
+
+**State now:** ingestion layer unchanged in behaviour — three adapters (Greenhouse + Lever
++ Workday), pipeline, storage, migration. The **`[OPEN]` §8.2 dedup-key region-grain item
+is CLOSED, key unchanged**, with the measurement, lever isolation, and counterexample-hunt
+evidence recorded above and regression-guarded by a test. 93 tests green. Citi remains a
+disabled registry entry; no locked decision, schema, interface, or pipeline lifecycle
+touched.
+
+**Next session:** with the region-grain item resolved, the open ingestion work is the
+**daily scheduler** around `run_ingestion()` (§3.7; the remaining `[OPEN]` §8.2 choice
+APScheduler vs Celery), or extending coverage (the tal.net/Oleeo cluster §3.6; the cheap
+SmartRecruiters + Teamtailor JSON follow-ups; region-keyword gaps Hungary/Canada/
+Philippines surfaced by the Citi fixture). Do not start ahead of the session prompt
+(rule 7).

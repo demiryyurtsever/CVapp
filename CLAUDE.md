@@ -101,30 +101,33 @@ adapter is cheap; a wrong guess about the schema or a locked decision is expensi
 ## Current status / where to continue
 
 See `docs/PROGRESS.md` for the authoritative, per-session build log. As of the last entry
-(Session 9):
+(Session 10):
 
 - **Done:** the ingestion layer end-to-end on fixtures — canonical schema
   (`ingestion/models.py`), the shared adapter interface (`ingestion/adapters/base.py`),
   source registry + loader (with an optional `config` block for ATS-specific quirks), the
   §3.8 classifiers, **three live adapters (Greenhouse + Lever + Workday)**, the pipeline
   orchestrator with §3.9 dedup/change-detection, Postgres storage (driven on SQLite in
-  tests) + the Alembic `0001` migration, and fixture-only tests. **89 tests green.** The
-  registry holds two real IB BBs on Workday — **Barclays** (enabled) and **Citi** (added
-  Session 9, **disabled**: its `workday_citi_earlycareers.json` fixture is captured for the
-  region-grain revisit, not polled yet); Point72/GH and Wealthfront/Lever remain non-IB
-  reference boards. The Workday `[OPEN]` §8.2 tenant variation was handled by **config, not
-  subclasses** (a proposal, not a lock).
-- **Session 9 (prep, no production logic changed):** closed the §3.8 region keyword gap —
-  the classifier now covers every office in all three existing fixtures (0 `unknown`; 22
-  postings moved off `unknown`). The dedup key stays **locked**; closing the gap re-shared
-  one Greenhouse same-region pair, so the *measured* fixture collapse moved 233→232 unique
-  (constants re-synced in tests, key unchanged). Captured a real **multi-office early-careers
-  Workday fixture** (Citi `citi.wd5` / site `2`: "Summer Analyst Program" across Sydney/
-  Melbourne/NY/Tokyo/Dubai/Budapest/Mississauga/Manila — incl. the same-region Sydney+
-  Melbourne shape) — the evidence the region-grain revisit was missing. Barclays' own
-  Workday paths (job-family facet; a separate early-careers site) were checked and do **not**
-  expose a multi-office grad programme (recorded in PROGRESS.md).
-- **Next session:** the dedup-key region-grain revisit (`[OPEN]` §8.2) is now unblocked —
-  drive it off `workday_citi_earlycareers.json`. OR the daily scheduler around
-  `run_ingestion()` (§3.7; `[OPEN]` APScheduler vs Celery, §8.2). Do not start work ahead of
-  its session prompt (standing rule 7).
+  tests) + the Alembic `0001` migration, and fixture-only tests. **93 tests green.** The
+  registry holds two real IB BBs on Workday — **Barclays** (enabled) and **Citi**
+  (**disabled**: its `workday_citi_earlycareers.json` multi-office fixture is captured for
+  evidence, not polled); Point72/GH and Wealthfront/Lever remain non-IB reference boards.
+  The Workday `[OPEN]` §8.2 tenant variation was handled by **config, not subclasses** (a
+  proposal, not a lock).
+- **Session 10 (analysis + decision; no production logic changed):** RESOLVED the
+  `[OPEN]` §8.2 **dedup-key region-grain** question — **CLOSED, key UNCHANGED.** Measured the
+  Citi multi-office programme under the locked key (46→45, the one collapse a same-office
+  lateral dup; the 18 early-careers postings → 18 distinct keys, 0 collapse). Isolated the
+  lever: on the same-region Sydney+Melbourne Corporate Advisory pair the **title** (city-in-
+  title), not the region grain, separates the openings. A counterexample hunt across the
+  reachable Workday BBs (captured fixtures + polite live probes of Barclays/Citi/MS) found
+  **no in-scope early-careers case** where the key hides a distinct opening (the breaking
+  shape exists only on out-of-scope lateral roles). Added one measurement test
+  (`ingestion/tests/test_citi_region_grain.py`, +4). Dedup key, schema, interface, pipeline
+  lifecycle, and the disabled Citi entry all untouched. A dossier §8.2/§3.9 annotation is
+  **proposed** in PROGRESS.md (not silently applied to the locked §8 doc).
+- **Next session:** the **daily scheduler** around `run_ingestion()` (§3.7; the remaining
+  `[OPEN]` §8.2 choice APScheduler vs Celery), or coverage extension (tal.net/Oleeo cluster
+  §3.6; cheap SmartRecruiters + Teamtailor JSON follow-ups; region-keyword gaps
+  Hungary/Canada/Philippines from the Citi fixture). Do not start work ahead of its session
+  prompt (standing rule 7).
