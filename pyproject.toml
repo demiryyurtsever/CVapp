@@ -1,7 +1,7 @@
 [project]
-name = "ib-platform-ingestion"
+name = "ib-platform"
 version = "0.1.0"
-description = "IB internship application platform — ingestion layer (dossier §3)."
+description = "IB internship application platform — ingestion (§3) + read API (§6.1)."
 requires-python = ">=3.11"
 dependencies = [
     "pydantic>=2",
@@ -10,6 +10,8 @@ dependencies = [
     "SQLAlchemy>=2",
     "alembic>=1.13",
     "psycopg[binary]>=3",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
 ]
 
 [project.optional-dependencies]
@@ -17,7 +19,7 @@ dev = ["pytest>=8"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
-testpaths = ["ingestion/tests"]
+testpaths = ["ingestion/tests", "api/tests"]
 
 [tool.black]
 line-length = 100

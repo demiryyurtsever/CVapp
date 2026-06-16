@@ -101,33 +101,40 @@ adapter is cheap; a wrong guess about the schema or a locked decision is expensi
 ## Current status / where to continue
 
 See `docs/PROGRESS.md` for the authoritative, per-session build log. As of the last entry
-(Session 10):
+(Session 11):
 
-- **Done:** the ingestion layer end-to-end on fixtures — canonical schema
+- **Done — ingestion (Layer 1):** end-to-end on fixtures — canonical schema
   (`ingestion/models.py`), the shared adapter interface (`ingestion/adapters/base.py`),
   source registry + loader (with an optional `config` block for ATS-specific quirks), the
   §3.8 classifiers, **three live adapters (Greenhouse + Lever + Workday)**, the pipeline
   orchestrator with §3.9 dedup/change-detection, Postgres storage (driven on SQLite in
-  tests) + the Alembic `0001` migration, and fixture-only tests. **93 tests green.** The
-  registry holds two real IB BBs on Workday — **Barclays** (enabled) and **Citi**
-  (**disabled**: its `workday_citi_earlycareers.json` multi-office fixture is captured for
-  evidence, not polled); Point72/GH and Wealthfront/Lever remain non-IB reference boards.
-  The Workday `[OPEN]` §8.2 tenant variation was handled by **config, not subclasses** (a
-  proposal, not a lock).
-- **Session 10 (analysis + decision; no production logic changed):** RESOLVED the
-  `[OPEN]` §8.2 **dedup-key region-grain** question — **CLOSED, key UNCHANGED.** Measured the
-  Citi multi-office programme under the locked key (46→45, the one collapse a same-office
-  lateral dup; the 18 early-careers postings → 18 distinct keys, 0 collapse). Isolated the
-  lever: on the same-region Sydney+Melbourne Corporate Advisory pair the **title** (city-in-
-  title), not the region grain, separates the openings. A counterexample hunt across the
-  reachable Workday BBs (captured fixtures + polite live probes of Barclays/Citi/MS) found
-  **no in-scope early-careers case** where the key hides a distinct opening (the breaking
-  shape exists only on out-of-scope lateral roles). Added one measurement test
-  (`ingestion/tests/test_citi_region_grain.py`, +4). Dedup key, schema, interface, pipeline
-  lifecycle, and the disabled Citi entry all untouched. A dossier §8.2/§3.9 annotation is
-  **proposed** in PROGRESS.md (not silently applied to the locked §8 doc).
-- **Next session:** the **daily scheduler** around `run_ingestion()` (§3.7; the remaining
-  `[OPEN]` §8.2 choice APScheduler vs Celery), or coverage extension (tal.net/Oleeo cluster
-  §3.6; cheap SmartRecruiters + Teamtailor JSON follow-ups; region-keyword gaps
-  Hungary/Canada/Philippines from the Citi fixture). Do not start work ahead of its session
-  prompt (standing rule 7).
+  tests) + the Alembic `0001` migration, and fixture-only tests. The registry holds two
+  real IB BBs on Workday — **Barclays** (enabled) and **Citi** (**disabled**: its
+  `workday_citi_earlycareers.json` fixture is captured for evidence, not polled);
+  Point72/GH and Wealthfront/Lever remain non-IB reference boards. The Workday `[OPEN]`
+  §8.2 tenant variation was handled by **config, not subclasses** (a proposal, not a lock).
+  The `[OPEN]` §8.2 **dedup-key region-grain** question is **CLOSED (key unchanged)** —
+  Session 10's measurement + counterexample hunt are guarded by
+  `ingestion/tests/test_citi_region_grain.py`.
+- **Done — read API (Layer §6.1), Session 11 — the FIRST read path:** a **read-only**
+  FastAPI app under `/api` over the ingested postings. `api/app.py` (`create_app()` factory
+  + `uvicorn api.app:app`), `api/deps.py` (request-scoped `Session`, reuses `ingestion.db`),
+  `api/schemas.py` (read models **derived from the §7 enums**, not a redefinition), and
+  `api/routers/postings.py`: **`GET /postings`** (filters on the §3.10-indexed columns
+  `firm`/`program_type`/`region`/`status`, `limit`/`offset`, sort `first_seen` desc then
+  `id`) and **`GET /postings/{id}`** (full §7 incl. `raw_description`). The three non-§7
+  bookkeeping columns (`dedup_key`, `consecutive_misses`, `source`) are **never exposed**;
+  `source_id` is detail-only. Tests in `api/tests/` seed a SQLite DB via the **real
+  pipeline** then drive a `TestClient` (no network). **110 tests green** (93 ingestion + 17
+  API). No write endpoints, scheduler, auth, frontend, tailoring, or new adapters were added.
+- **Known data-quality gaps (surfaced by Session 11's live run, NOT yet fixed — each is its
+  own future session):** the seeded board is ~92% non-IB reference roles, **95%
+  `unclassified`**, and `program_type=summer&region=UK` returns **0**. Root causes are
+  upstream of the API: Barclays is captured via free-text `search_text: graduate` (returns
+  lateral roles → should move to an early-careers job-family facet), only one IB firm is
+  enabled, and Workday `raw_description` is mostly absent in the fixture. See PROGRESS.md
+  Session 11 "what the output actually looks like".
+- **Next session (build order ingestion → tailoring → frontend → autofill):** extend the
+  read API toward frontend needs (calendar/deadline view §6.2) or pick up the deferred
+  ingestion **scheduler** (§3.7, `[OPEN]` §8.2 APScheduler vs Celery). The data-quality gaps
+  above are coverage/capture work. Do not start work ahead of its session prompt (rule 7).

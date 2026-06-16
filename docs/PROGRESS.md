@@ -734,3 +734,131 @@ APScheduler vs Celery), or extending coverage (the tal.net/Oleeo cluster §3.6; 
 SmartRecruiters + Teamtailor JSON follow-ups; region-keyword gaps Hungary/Canada/
 Philippines surfaced by the Citi fixture). Do not start ahead of the session prompt
 (rule 7).
+
+## Session 11 — First read path: read-only API over the ingested postings (§6.1)
+
+First component of the **API layer** (build order: ingestion → tailoring → frontend →
+autofill; ingestion is done, so this is the start of the read surface §6.1). Scope was a
+MINIMAL read-only query interface so the postings already in storage become visible and
+filterable. **Ingestion, the schema, the dedup key, and every locked decision are
+untouched** — nothing in `ingestion/` changed except being imported by the new layer.
+
+### What changed (files + behaviour)
+
+New `/api` package (the dossier's per-layer convention §2.3):
+
+1. **`api/app.py`** — FastAPI app factory `create_app()` (so tests can override the DB
+   dependency) + a module-level `app` for `uvicorn api.app:app`. Mounts a `/health`
+   probe and the postings router. **Read routes only** — no write/ingestion/auth/CV/
+   profile/tailor routes (the rest of §6.1 is out of scope).
+2. **`api/deps.py`** — request-scoped SQLAlchemy `Session` dependency `get_session`,
+   built lazily from `DATABASE_URL` by **reusing `ingestion.db`** (one openings DB; the
+   §7 storage models stay in `ingestion.storage`). The API never commits — it only reads.
+3. **`api/schemas.py`** — read-API response models **derived from the §7 schema, not a
+   redefinition**: they import the canonical enums (`FirmTier`/`ProgramType`/`Region`/
+   `Status`) from `ingestion.models` and re-expose a chosen subset.
+   - `PostingSummary` (list row): the §7 fields a student needs — firm + tier, title,
+     program_type, division, location, region, dates, rolling, status, `source_url`, and
+     first/last-seen. Omits the heavy `raw_description` and the internal `source_id`.
+   - `PostingDetail` (single posting): the **full §7 record** — adds `source_id` and
+     `raw_description`.
+   - `PostingPage`: `{total, limit, offset, items}` envelope so a board UI can paginate.
+4. **`api/routers/postings.py`** —
+   - `GET /postings`: filters on exactly the §3.10-indexed columns
+     (`firm`, `program_type`, `region`, `status`), ANDed; `limit` (1–200, default 50) +
+     `offset` (≥0) pagination; default sort **`first_seen` desc, then `id` asc**. The `id`
+     tiebreaker is load-bearing: a bulk ingest stamps every row with the *same*
+     `first_seen`, so without it pagination order is non-deterministic. Filter values are
+     typed with the §7 enums → an invalid value (e.g. `program_type=internship`) is a 422
+     before any query runs. **No new index or schema field was added.**
+   - `GET /postings/{id}`: full §7 record, or 404.
+5. **`pyproject.toml` / `requirements.txt`** — added `fastapi` + `uvicorn`; added
+   `api/tests` to `testpaths`; renamed the project `ib-platform-ingestion` → `ib-platform`
+   (it is no longer ingestion-only).
+
+**Read-surface decision — what a consumer sees vs. internal bookkeeping** (the prompt
+asked this be decided + documented; rationale lives in `api/schemas.py`): the three
+non-§7 `PostingRow` columns — **`dedup_key`, `consecutive_misses`, `source`** (the
+registry source-key, *not* `source_url`/`source_id`) — are pipeline bookkeeping (§3.9/
+§3.11) and are **NOT exposed**. Because the response models only declare §7 fields, those
+columns are *structurally* unable to appear (Pydantic `from_attributes` reads only
+declared fields; FastAPI `response_model` filters output to them). `source_id` (§7,
+"ATS-native id … for dedup") is internal plumbing, so it is kept **off the list view** and
+surfaced only on the single-posting detail.
+
+**Tests — `api/tests/` (+17, all green):** `conftest.py` seeds an in-memory SQLite DB by
+driving the **real `run_ingestion`** over the same three captured fixtures the §3 tests use
+(Point72/GH, Wealthfront/Lever, Barclays/WD) — real `parse()` + real §3.8 classifiers — then
+points a FastAPI `TestClient` at that DB via a dependency override. No network (a loopback-
+only socket guard mirrors CLAUDE.md rule 5; the TestClient's in-process event loop needs a
+loopback self-pipe, so the guard blocks only non-loopback connects). Filter/pagination
+expectations are computed from the seeded DB, not hardcoded. `test_postings_api.py` asserts:
+list returns all seeded rows; each filter narrows to the DB ground truth; filters compose
+(AND); pagination pages are disjoint + complete + stably ordered; `limit`/`offset` bounds
+and invalid enum values are 422; the detail endpoint returns exactly the 17 §7 fields incl.
+`raw_description`; unknown id → 404, malformed id → 422; and **the three bookkeeping fields
+never leak** in either list or detail. One test drives a posting through the real closed
+lifecycle (empty second run, N=1) to prove the `status` filter partitions open vs. closed.
+
+**Verify:**
+```powershell
+.\.venv\Scripts\python -m pip install -r requirements.txt   # adds fastapi + uvicorn
+.\.venv\Scripts\python -m pytest -q                          # 110 passed (was 93; +17 API)
+.\.venv\Scripts\python -m pytest -q api/tests                # 17 passed
+# Run it for real: set DATABASE_URL to a SQLite file, seed via the pipeline, then
+#   .\.venv\Scripts\python -m uvicorn api.app:app
+# and GET http://127.0.0.1:8000/postings?program_type=summer  (interactive docs at /docs).
+```
+
+### What the output ACTUALLY looks like (live run — honest findings)
+
+Ran it for real: seeded a throwaway SQLite DB via the real pipeline from the three captured
+real-board fixtures, booted a **real uvicorn server**, and hit `/postings` over HTTP. The
+**read path works correctly** — but seeing the output exposes that the **ingested data is
+not yet useful to an IB student**, and the gaps are in coverage/capture, not the API:
+
+- **268 postings** persisted (287 found, 19 collapsed by the §3.9 key). Composition:
+  **Point72 232** (MM — a multi-manager fund *reference* board, **not IB**), **Wealthfront
+  15** (boutique fintech *reference* board, **not IB**), **Barclays 21** (BB — the **only
+  real IB firm** seeded). So ~92% of the rows are non-IB reference data.
+- **Classification is sparse: 256/268 (95%) are `unclassified`** — only 12 classify
+  (6 graduate, 5 summer, 1 spring_week). For Barclays specifically: **20 of 21
+  unclassified, 1 graduate**. This is mostly *correct* behaviour, not a classifier bug:
+  Barclays is captured via the registry's free-text `search_text: graduate`, which returns
+  lateral/experienced roles ("AVP Remittance", "Lead Data Architect", "Risk Manager…") that
+  *should* be `unclassified` (§3.8 review queue). The real lever is the **capture/search
+  strategy** (registry `search_text` vs a proper early-careers job-family facet — the
+  registry comment already flags `applied_facets` as the fix once facet ids are confirmed),
+  not the classifier keywords.
+- **The core product query returns nothing:** `GET /postings?program_type=summer&region=UK`
+  → **total=0**. A UK student hunting summer IB internships sees an empty board. The 5
+  `summer` rows present are all **Point72** US/APAC *quant* internships; the 24 `UK` rows
+  are all Point72 unclassified quant/research roles. The one Barclays `graduate` posting is
+  a **Technology Developer Graduate Programme in Prague (EMEA)** — not a UK IBD summer role.
+- **Most Workday postings have no `raw_description`** — the Barclays fixture captured only
+  one per-posting detail follow-up, so 20/21 have `raw_description=None` in this seed. That
+  is a fixture-capture limitation (production `fetch()` pulls every detail), but it means
+  the Layer 2 posting parser would currently have almost nothing to read for Barclays.
+- **No leak confirmed in the wild:** the detail response carried exactly the 17 §7 keys;
+  `dedup_key`/`consecutive_misses`/`source` were absent.
+
+**Verdict:** the API is sound and the §7 data round-trips cleanly to a consumer, but the
+board a student would actually see today is dominated by non-IB reference roles and an
+empty summer/UK intersection. The fix is upstream of this layer — **(1)** swap the
+free-text Workday `search_text` for early-careers job-family facets (better Barclays
+capture), **(2)** add genuine IB early-careers sources (the registry has one IB firm
+enabled), and **(3)** capture full Workday details. None of that is this session's scope
+(rule 7); it is recorded here because it only became visible once we could SEE the output.
+
+**State now:** ingestion layer unchanged; the **first read path exists** — a read-only
+FastAPI app exposing `GET /postings` (firm/program_type/region/status filters + pagination
++ first_seen-desc sort) and `GET /postings/{id}` (full §7), with read-API response models
+derived from §7 and internal bookkeeping fields kept off the wire. **110 tests green**
+(93 ingestion + 17 API). No write endpoints, scheduler, auth, frontend, tailoring, or new
+adapters were built; Citi stays disabled.
+
+**Next session (per build order):** either continue the API surface toward the **frontend**
+needs (e.g. the calendar/deadline view query §6.2, a firm-tier filter when §6.4 is exposed)
+or pick up the deferred ingestion **scheduler** (§3.7). The honest data-quality gaps above
+(Workday facet capture, more IB sources) are coverage work, each its own scoped session —
+do not start ahead of the prompt (rule 7).
